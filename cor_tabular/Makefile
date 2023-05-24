@@ -14,6 +14,7 @@ else ifeq ($(TRIAL),$(filter $(TRIAL), janssen_pooled_EUA janssen_na_EUA janssen
 	Rscript code/make_table_all.R D29IncludeNotMolecConfirmedstart1
 else ifeq ($(TRIAL),$(filter $(TRIAL), janssen_pooled_partA  janssen_la_partA))
 	Rscript code/make_table_all.R D29IncludeNotMolecConfirmed
+	Rscript code/make_table_all.R D29ModerateIncludeNotMolecConfirmed
 	Rscript code/make_table_all.R D29SevereIncludeNotMolecConfirmed
 else ifeq ($(TRIAL),$(filter $(TRIAL), janssen_pooled_partAsenior janssen_pooled_partAnonsenior janssen_na_partA janssen_na_partAsenior janssen_na_partAnonsenior janssen_la_partAsenior janssen_la_partAnonsenior janssen_sa_partA  janssen_sa_partAnonsenior)) # janssen_sa_partAsenior has too few cases
 	Rscript code/make_table_all.R D29IncludeNotMolecConfirmed
