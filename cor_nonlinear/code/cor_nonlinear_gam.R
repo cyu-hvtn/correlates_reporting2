@@ -30,12 +30,12 @@ marginalized.risk.gam.boot=function(formula, marker.name, type=1, data, B, ci.ty
     } else stop("wrong type")
     
     # for use in bootstrap
-    if(config$case_cohort) ptids.by.stratum=get.ptids.by.stratum.for.bootstrap (data) 
+    if(config$sampling_scheme == 'case_cohort') ptids.by.stratum=get.ptids.by.stratum.for.bootstrap (data) 
     
     # bootstrap
     out=mclapply(1:B, mc.cores = numCores, FUN=function(seed) {   
         # 
-        if(config$case_cohort) {
+        if(config$sampling_scheme == 'case_cohort') {
             dat.b = get.bootstrap.data.cor (data, ptids.by.stratum, seed) 
         } else {
             dat.b = bootstrap.case.control.samples(data, seed, delta.name="EventIndPrimary", strata.name="tps.stratum", ph2.name="ph2") 
@@ -112,7 +112,7 @@ for (w.wo.plac in 1:2) { # 1 with placebo lines, 2 without placebo lines. Implem
     if (exists("ylims.cor")) {
         ylim=ylims.cor[[1]][[w.wo.plac]] # from cor_coxph
     } else {
-        print("no ylims.cor found")
+        if(verbose>=2) print("no ylims.cor found")
         ylim=range(sapply(risks.all, function(x) x$prob), if(w.wo.plac==1) prev.plac, prev.vacc, 0)
     }
     
