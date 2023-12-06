@@ -79,6 +79,18 @@
       "Repository": "CRAN",
       "Hash": "0e59129db205112e3963904db67fd0dc"
     },
+    "MIWilson": {
+      "Package": "MIWilson",
+      "Version": "1.0.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "hungf8342",
+      "RemoteRepo": "MIWilson",
+      "RemoteRef": "master",
+      "RemoteSha": "0d73f415bf39af7bc47a28438e636c2a5d6fb75e",
+      "Hash": "acd4ba33a2f43a56c02e4100fb290261"
+    },
     "Matrix": {
       "Package": "Matrix",
       "Version": "1.3-4",
@@ -497,15 +509,15 @@
     },
     "copcor": {
       "Package": "copcor",
-      "Version": "2023.8-31",
+      "Version": "2023.11-17",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "CoVPN",
       "RemoteRepo": "copcor",
       "RemoteRef": "main",
-      "RemoteSha": "5877379ee8f29520c4a0a8b2f0cfa6a7806c90ca",
-      "Hash": "fd1c759612a990529d6b1bba88d37978"
+      "RemoteSha": "1f7364f7bfb17b08a6432ec5c7fc2026d70b2736",
+      "Hash": "5b79b37affed328d1b91cf019e67665d"
     },
     "corrplot": {
       "Package": "corrplot",
@@ -1091,15 +1103,15 @@
     },
     "kyotil": {
       "Package": "kyotil",
-      "Version": "2023.8-27",
+      "Version": "2023.11-22",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "youyifong",
       "RemoteRepo": "kyotil",
       "RemoteRef": "master",
-      "RemoteSha": "c820a6cd5f20d51843881fb4a2bc51063f0056c0",
-      "Hash": "131175b3bb45873dc67815d5e3fc63b6"
+      "RemoteSha": "182545025e0d430cfe6784b12020f11d1632742c",
+      "Hash": "585d94533bf62fc8548d0ea33d1caa64"
     },
     "labeling": {
       "Package": "labeling",
@@ -1425,6 +1437,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "658104b545c7d7634bae87d5c304628b"
+    },
+    "osDesign": {
+      "Package": "osDesign",
+      "Version": "1.8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "373ae10f0b7f570905bade23ddd13695"
     },
     "pROC": {
       "Package": "pROC",

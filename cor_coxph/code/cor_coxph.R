@@ -1,4 +1,3 @@
-#Sys.setenv(TRIAL = "vat08m_naive"); COR="D43"; Sys.setenv(VERBOSE = 1)
 #Sys.setenv(TRIAL = "moderna_mock"); COR="D29"; Sys.setenv(VERBOSE = 1) 
 #Sys.setenv(TRIAL = "azd1222"); COR="D29"; Sys.setenv(VERBOSE = 1) 
 #Sys.setenv(TRIAL = "moderna_real"); COR="D57over29"; Sys.setenv(VERBOSE = 1) 
@@ -15,10 +14,16 @@
 #Sys.setenv(TRIAL = "hvtn705secondNonRSA"); COR="D210"; Sys.setenv(VERBOSE = 1) 
 #Sys.setenv(TRIAL = "janssen_na_partA"); COR="D29IncludeNotMolecConfirmed"; Sys.setenv(VERBOSE = 1) 
 #Sys.setenv(TRIAL = "hvtn705second"); COR="D210"; Sys.setenv(VERBOSE = 1) 
+#Sys.setenv(TRIAL = "janssen_partA_VL"); COR="D29"; Sys.setenv(VERBOSE = 1) 
 
 print(date())
 renv::activate(project = here::here(".."))     
 source(here::here("..", "_common.R")) # dat.mock is made
+
+# tmp, just so that we can add MIWilson to renv
+library(MIWilson)
+phats = c(0.2, 0.23, 0.25)
+mi_wilson_phat(phats, 100, 0.99, FALSE)
 
 # hack to bring in uncheck commited changes to copcor
 # source("~/copcor/R/plotting.R")
@@ -54,14 +59,6 @@ B <-       config$num_boot_replicates
 numPerm <- config$num_perm_replicates # number permutation replicates 1e4
 myprint(B)
 myprint(numPerm)
-
-# uloq censoring, done here b/c should not be done for immunogenicity reports
-# note that if delta are used, delta needs to be recomputed
-for (a in assays) {
-  for (t in "Day"%.%tpeak ) {
-    dat.mock[[t %.% a]] <- ifelse(dat.mock[[t %.% a]] > log10(uloqs[a]), log10(uloqs[a]), dat.mock[[t %.% a]])
-  }
-}    
 
 # define an alias for EventIndPrimaryDxx
 dat.mock$yy=dat.mock[[config.cor$EventIndPrimary]]
@@ -193,7 +190,6 @@ if(length(config$forestplot_script)==1 & !study_name %in% c("PREVENT19","VAT08m"
 source(here::here("code", "cor_coxph_risk_bootstrap.R"))
 
 for.title="" # need to be defined even if it is empty
-
 source(here::here("code", "cor_coxph_risk_plotting.R"))
 
 if (attr(config, "config") %in% c("moderna_real", "janssen_pooled_EUA")) source(here::here("code", "cor_coxph_samplesizeratio.R"))
