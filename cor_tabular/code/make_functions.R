@@ -27,7 +27,7 @@ getResponder <- function(data,
   for (i in times){
     for (j in assays){
       post <- paste0(i, j)
-      bl <- paste0("B", j)
+      bl <- ifelse(substr(j, nchar(j)-1, nchar(j)) %in% c("la", "na", "sa"), paste0("B", substr(j, 1, nchar(j)-2)), paste0("B", j))
       delta <- paste0("Delta", gsub("Day", "", i), "overB", j)
       cutoff <- pos.cutoffs[j]
       
