@@ -35,6 +35,8 @@ else ifeq ($(TRIAL),$(filter $(TRIAL), profiscov))
 	Rscript code/make_table_all.R D91
 else ifeq ($(TRIAL),$(filter $(TRIAL), profiscov_lvmn))
 	Rscript code/make_table_all.R D43	
+else ifeq ($(TRIAL),$(filter $(TRIAL), id27hpv))
+	Rscript code/make_table_all_hpv.R M18	
 endif
 
 ## clean            : delete contents of data_clean/ and output/ directories

@@ -827,9 +827,4 @@ save.results.to <- paste0(here::here("output"), "/", attr(config,"config"))
 if (!dir.exists(save.results.to))  dir.create(save.results.to)
 print(paste0("save.results.to equals ", save.results.to))
 
-save(tlf, tab_dm_neg, tab_dm_pos, tab_dm_neg_ph1, tab_dm_pos_ph1, 
-     tab_strtm1, tab_strtm2, tab_strtm2_1, tab_strtm2_2, 
-     tab_case_cnt, tab_days, 
-     case_vacc_neg, case_plcb_neg,
-     case_vacc_pos, case_plcb_pos,
-     file = file.path(save.results.to, sprintf("Tables%s.Rdata", ifelse(exists("COR"), COR, ""))))
+save(list = c("tlf", names(tlf)), file = file.path(save.results.to, sprintf("Tables%s.Rdata", ifelse(exists("COR"), COR, ""))))
