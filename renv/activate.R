@@ -76,9 +76,22 @@ local({
 
   }
 
+  # allow environment variable to control activation
+  activate <- Sys.getenv("RENV_ACTIVATE_PROJECT")
+  if (!nzchar(activate)) {
+
+    # don't auto-activate when R CMD INSTALL is running
+    if (nzchar(Sys.getenv("R_INSTALL_PKG")))
+      return(FALSE)
+
+  }
+
+  # bail if activation was explicitly disabled
+  if (tolower(activate) %in% c("false", "f", "0"))
+    return(FALSE)
+
   # avoid recursion
-  if (identical(getOption("renv.autoloader.running"), TRUE)) {
-    warning("ignoring recursive attempt to run renv autoloader")
+  if (nzchar(Sys.getenv("RENV_R_INITIALIZING")))
     return(invisible(TRUE))
   }
 
