@@ -124,7 +124,7 @@ base::load(here::here("cor_tabular", "output", attr(config,"config"), d))
                      escape = FALSE,
                      linesep=line_sep,
                      col.names = linebreak(col_name.j, align="l"),
-                    caption = caption.j
+                     caption = caption.j
                      ) %>%
         column_spec(1, width = ifelse("col1"%in%tlf_args, tlf_labels[["col1"]],"2.7cm")) %>% 
         kable_styling(latex_options = c("repeat_header", "scale_down"), 

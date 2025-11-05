@@ -56,12 +56,14 @@ tlf <-
                             "T-cell data "[grepl("AB", config.cor$ph1)], 
                             "for the Investigational and Comparator Vaccine arms (",
                             "RIS, RIS-sera, RIS-nasal, or RIS-saliva"[!grepl("AB", config.cor$ph1)],
-                            "T-cell data"[grepl("AB", config.cor$ph1)],
+                            "RIS-PBMC"[grepl("AB", config.cor$ph1)],
                             ")"), 
       table_footer = randomsubcohort,
-      deselect = "subgroup",
-      pack_row = "subgroup",
-      header_above1 = c(" "=1, "Sera" = 3, "Nasal Fluid" = 3, "Saliva" = 3),
+      col_name = c(""[!grepl("AB", config.cor$ph1)],  "Characteristics", "Investigational Vaccine", "Comparator Vaccine", "Total"),
+      deselect = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
+      pack_row = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
+      font_size = if(grepl("AB", config.cor$ph1)){10} else{9},
+      collapse_rows= 1,
       col1="5cm"
     ),
     
@@ -71,132 +73,113 @@ tlf <-
                             "T-cell data "[grepl("AB", config.cor$ph1)], 
                             "for the Investigational and Comparator Vaccine arms (",
                             "Track A RIS-sera, Track A RIS-nasal, or Track A RIS-saliva"[!grepl("AB", config.cor$ph1)],
-                            "Track A T-cell data"[grepl("AB", config.cor$ph1)],
+                            "Track A RIS-PBMC"[grepl("AB", config.cor$ph1)],
                             ")"),
       table_footer = randomsubcohort,
-      deselect = "subgroup",
-      pack_row = "subgroup",
-      header_above1 = c(" "=1, "Sera" = 3, "Nasal Fluid" = 3, "Saliva" = 3),
+      col_name = c(""[!grepl("AB", config.cor$ph1)], "Characteristics", "Investigational Vaccine", "Comparator Vaccine", "Total"),
+      deselect = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
+      pack_row = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
+      collapse_rows= 1,      
       col1="5cm"
     ),
     
-    tab_strtm1 = list(
-      table_header = "Sample Sizes of Random Subcohort Strata for Measuring Antibody Markers",
-      deselect = "Arm",
-      pack_row = "Arm"
+    tab_strtm1 = list(),
+    
+    tab_rr_diff = list(
+      table_header = "Response frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and CI estimates use IPS weights. Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                      (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
+      header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
-    tab_strtm2 = list(
-      table_header = "Sample Sizes of Random Subcohort Strata for Measuring Antibody Markers",
-      deselect = "Arm",
-      pack_row = "Arm"
+    
+    tab_rr_diff_all = list(
+      table_header = "Response frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and CI estimates use IPS weights. (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
+      header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
-    tab_bind1 = list(
-      table_header = "Percentage of responders for binding antibody
-      markers",
-      table_footer = c(
-        "Binding Antibody Responders are defined as participants who had baseline
-      values below the lower limit of detection (LLOQ) with detectable concentration 
-      above the assay LLOQ, or as participants with baseline values above the LLOQ 
-      with a 4-fold increase in concentration.",
-        "Percentages are calculated for the whole per-protocol group/subgroup, 
-      using inverse probability weighting."),
-      loop = "subgroup",
-      group_table_col = c("Rx", "Group", "Baseline", "Visit", "N", "Marker"),
-      deselect = "subgroup",
-      pack_row = "subgroup"
+    
+    tab_rr_diff_A = list(
+      table_header = "Response frequencies of IgG-bAb markers at D91 and D366 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and CI estimates use IPS weights. Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                      (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
+      header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
-    tab_bind2 = list(
-      table_header = "Percentage of responders for binding antibody markers",
-      table_footer = c(
-      "Binding Antibody Responders are defined as participants who had baseline
-      values below the lower limit of detection (LLOQ) with detectable concentration 
-      above the assay LLOQ, or as participants with baseline values above the LLOQ 
-      with a 4-fold increase in concentration.",
-      "Percentages are calculated for the whole per-protocol group/subgroup, 
-      using inverse probability weighting."),
-      loop = "subgroup",
-      group_table_col = c("Rx", "Group", "Baseline", "Visit", "N", "Marker"),
-      deselect = "subgroup",
-      pack_row = "subgroup"),
+    tab_rr_diff_all_A = list(
+      table_header = "Response frequencies of IgG-bAb markers at D91 and D366 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and CI estimates use IPS weights. (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
+      header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
+    ),
     
-    tab_pseudo = list(
-      table_header = "Percentage of responders for ID50 pseudo-virus neutralization antibody markers",
-      table_footer = c(
-        "Neutralization Responders are defined as participants who had baseline
-        values below the lower limit of detection (LLOQ) with detectable
-        ID50 neutralization titer above the assay LLOQ, or as participants with
-        baseline values above the LLOQ with a 4-fold increase in ID50.",
-        "Percentages are calculated for the whole per-protocol group/subgroup, 
-        using inverse probability weighting."
-    
-      ),
-      loop = "subgroup",
-      group_table_col = c("Rx", "Group", "Baseline", "Visit", "N", "Marker"),
-      deselect = "subgroup",
-      pack_row = "subgroup"),
-    
-    tab_t = list(
-      table_header = "Percentage of responders for T-cell markers",
-      table_footer = c(
-        "T cell marker positivity is based on Fisher’s exact test and control for FDR at 1% over all participants."
-      ),
-      loop = "subgroup",
-      group_table_col = c("Rx", "Group", "Baseline", "Visit", "N", "Marker"),
-      deselect = "subgroup",
-      pack_row = "subgroup"),
-    
-    tab_gm = list(
-      table_header = ifelse(grepl("AB", config.cor$ph1), "Geometric mean responses (GMRs)", "Geometric mean titers (GMTs) and geometric mean
-      concentrations (GMCs)"),
-      table_footer = "",
-      loop = "subgroup",
-      group_table_col = c("Rx", "Group", "Baseline", "Visit", "N", "Marker"),
-      deselect = "subgroup",
-      pack_row = "subgroup",
-      col1="7cm"),
     
     tab_gmr = list(
-      table_header = ifelse(grepl("AB", config.cor$ph1), "Geometric mean responses (GMRRs) between post-vaccinations/pre-vaccination", "Geometric mean titer ratios (GMTRs) or geometric mean
-      concentration ratios (GMCRs) between post-vaccinations/pre-vaccination"),
+      table_header = "Geometric mean values of IgG-bAb markers at D01, D31, and D181 by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                      (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
-      loop = "subgroup",
-      group_table_col = c("Rx", "Group", "Baseline", "Visit", "N", "Marker"),
-      deselect = "subgroup",
-      pack_row = "subgroup",
+      col1="2cm"),
+    
+    tab_gmr_all = list(
+      table_header = "Geometric mean values of IgG-bAb markers at D01, D31, and D181 by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_footer = " ",
+      col1="2cm"),
+    
+    
+    tab_gmr_A = list(
+      table_header = "Geometric mean values of IgG-bAb markers at D01, D91, and D366 by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                      (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_footer = " ",
+      col1="2cm"),
+    
+    tab_gmr_all_A = list(
+      table_header = "Geometric mean values of IgG-bAb markers at D01, D91, and D366 by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_footer = " ",
       col1="2cm"),
     
     tab_rgmt = list(
-      table_header = "The ratios of GMTs/GMCs/GMRs between groups",
+      table_header = "Geometric mean values of IgG-bAb markers by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                      (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
-      loop = "subgroup",
-      pack_row = "subgroup",
-      deselect = "subgroup",
-      group_table_col = c("subgroup","Rx", "Baseline", "Visit"),
       col1="4cm"),
     
-    tab_rrdiff = list(
-      table_header = "Differences in the responder rates",
-      table_footer = "Percentages are calculated for the whole per-protocol 
-      group/subgroup, using inverse probability weighting.",
-      loop = "subgroup",
-      pack_row = "subgroup",
-      group_table_col = c( "Group", "Baseline","Visit", "Marker"),
-      deselect = "subgroup",
+    
+    tab_rgmt_all = list(
+      table_header = "Geometric mean values of IgG-bAb markers by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_footer = " ",
       col1="4cm"),
     
-    tab_pos = list(
-      table_header = "Antibody levels in the baseline SARS-CoV-2
-      positive per-protocol cohort (vaccine vs. placebo)",
-      table_footer = "Percentages are calculated for the whole 
-      per-protocol group/subgroup, using inverse probability weighting.",
-      col_name = c("Visit", "Marker", "N", "Resp rate", "GMT/GMC", "N",
-                   "Resp rate", "GMT/GMC", "Resp Rate\nDifference", "GMTR/\nGMCR"),
-      header_above1 = c(" "=2, "Vaccine" = 3, "Placebo" = 3, "Comparison" = 2),
-      header_above2 = c(" "=2, "Baseline SARS-CoV-2 Positive" = 8),
-      col1="1cm")  )
+    tab_rgmt_A = list(
+      table_header = "Geometric mean values of IgG-bAb markers by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                      (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_footer = " ",
+      col1="4cm"),
+    
+    tab_rgmt_all_A = list(
+      table_header = "Geometric mean values of IgG-bAb markers by Investigational 
+                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_footer = " ",
+      col1="4cm")
+    )
 
 # Depends on the Incoming data
 # if(include_bindN & !"bindN" %in% assays & study_name!="PROFISCOV"){
@@ -366,14 +349,14 @@ if(study_name %in% c("PROFISCOV")){
 pos.cutoffs <- assay_metadata$pos.cutoff
 names(pos.cutoffs) <- assay_metadata$assay
 
-if (grepl("AB", config.cor$ph1)) {
-  ds <- ds_s
-  names(ds) <- gsub("_resp", "Resp", names(ds))
-} else {
+# if (grepl("AB", config.cor$ph1)) {
+#   ds <- ds_s
+#   names(ds) <- gsub("_resp", "Resp", names(ds))
+# } else {
   ds <- getResponder(ds_s, times=grep("Day", times, value=T), 
                      assays=assay_metadata$assay, pos.cutoffs = pos.cutoffs)
   
-}
+# }
 
 subgrp <- c(
   All = "All participants", 
@@ -476,7 +459,7 @@ if (!grepl("AB", config.cor$ph1)) {
                        ds %>% filter(B_nasal==1) %>% mutate(Bsample="nasal"))
   
 } else {
-  ds <- ds %>% mutate(Bsample="PBMC")
+  ds_smpl <- ds %>% mutate(Bsample="PBMC")
 }
 
 
@@ -485,7 +468,7 @@ subgrp_add <- c("Bsample")
 ds_long_ttl <- ds_smpl %>%
   dplyr::filter(!!as.name(paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))==1) %>% 
   bind_rows(mutate(., Arm="Total")) %>% 
-  bind_rows(mutate(., Bsample="RIS")) %>% 
+  bind_rows(mutate(., Bsample="RIS") %>% filter(!grepl("AB", config.cor$ph1)) %>% distinct()) %>%
   mutate(AgeRiskC = ifelse(grepl("$\\geq$ 65", AgeRiskC, fixed=T), "Age $\\geq$ 65 ", AgeRiskC)) %>% 
   mutate_all(as.character) %>% 
   pivot_longer(all_of(c(num_v1, num_v2, cat_v)), names_to="subgroup", values_to="subgroup_cat")
@@ -555,13 +538,11 @@ tab_dm <- tab_dm %>%
            `Comparator Vaccine`, Total)) %>% 
   select_if(~ !all(is.na(.)))
 
-# tlf$tab_dm$col_name <- gsub("sera_|nasal_|saliva_", "", names(tab_dm))
-
 
 ds_long_A <- ds_smpl %>% 
   dplyr::filter(Track=="A") %>% 
   bind_rows(mutate(., Arm="Total")) %>% 
-  bind_rows(mutate(., Bsample="RIS")) %>% 
+  bind_rows(mutate(., Bsample="RIS") %>% filter(!grepl("AB", config.cor$ph1)) %>% distinct()) %>% 
   mutate(AgeRiskC = ifelse(grepl("$\\geq$ 65", AgeRiskC, fixed=T), "Age $\\geq$ 65 ", AgeRiskC)) %>% 
   mutate_all(as.character) %>% 
   pivot_longer(all_of(c(num_v1, num_v2, cat_v)), names_to="subgroup", values_to="subgroup_cat")
@@ -597,7 +578,8 @@ dm_num_A <- ds_long_A %>%
     N = n(),
     .groups = 'drop'
   ) %>% 
-  mutate(subgroup_cat = case_when(subgroup %in% num_v1 ~ "Mean (Range)",
+  mutate(subgroup_cat = case_when(subgroup %in% num_v1 & subgroup %in% num_v2 ~ "Mean $\\pm$ SD (Range)",
+                                  subgroup %in% num_v1 ~ "Mean (Range)",
                                   subgroup %in% num_v2 ~ "Mean $\\pm$ SD"),
          subgroup=ifelse(subgroup=="Age", "AgeC", subgroup))
 
@@ -614,31 +596,21 @@ tab_dm_A <- bind_rows(dm_cat_A, dm_num_A) %>%
                group_by(Arm, across(all_of(subgrp_add))) %>%
                summarise(tot = n()),
              by = c("Arm", subgrp_add)) %>% 
-  mutate(Arm = paste0(Arm, "\n(N = ", tot, ")"), subgroup=subgrp[subgroup],
-         Bsample=factor(Bsample, levels = c("sera", "nasal", "saliva"))) %>%
-  pivot_wider(id_cols = c(subgroup, subgroup_cat),
-              names_from = c(!!subgrp_add, Arm), 
+  mutate(#Arm = paste0(Arm, "\n(N = ", tot, ")"), subgroup=subgrp[subgroup],
+        Bsample=factor(ifelse(Bsample=="RIS", "RIS", paste0("RIS-", Bsample)), levels = c("RIS", "RIS-sera", "RIS-nasal", "RIS-saliva"))) %>%
+  pivot_wider(id_cols = c(subgroup, subgroup_cat, !!subgrp_add),
+              names_from = Arm, 
               names_sort = T,
               values_from = c(rslt)) %>%
   mutate(Characteristics = factor(subgroup_cat, levels=char_lev),
-         subgroup=factor(subgroup, levels=subgrp)) %>%
-  arrange(subgroup, Characteristics)
+         subgroup=factor(subgrp[subgroup], levels=subgrp)) %>%
+  arrange(Bsample, subgroup, Characteristics)
 
 
 tab_dm_A <- tab_dm_A %>% 
-  select_at(c("subgroup", "Characteristics", 
-              grep("sera_Investigational" ,names(.), value = T),
-              grep("sera_Comparator" ,names(.), value = T),
-              grep("sera_Total" ,names(.), value = T),
-              grep("nasal_Investigational" ,names(.), value = T),
-              grep("nasal_Comparator" ,names(.), value = T),
-              grep("nasal_Total" ,names(.), value = T),
-              grep("saliva_Investigational" ,names(.), value = T),
-              grep("saliva_Comparator" ,names(.), value = T),
-              grep("saliva_Total" ,names(.), value = T))) %>% 
+  select(c(Bsample, subgroup, Characteristics,`Investigational Vaccine`, 
+           `Comparator Vaccine`, Total)) %>% 
   select_if(~ !all(is.na(.)))
-
-tlf$tab_dm_A$col_name <- gsub("sera_|nasal_|saliva_", "", names(tab_dm_A))
 
 
 print("Done with table 1") 
@@ -658,9 +630,29 @@ print("Done with table 1")
 # Group: Category in each subgroup
 
 sub.by <- c("Arm")
-# resp.v <- grep("Resp|2lloq|4lloq|FR2|FR4", names(ds), value = T) 
-resp.v <- grep("Resp", names(ds), value = T) 
+mrks <- c("bindSpike_IgG_%s", "bindSpike_IgG_%s_delta_AY.4", "bindSpike_IgG_%s_BA.5", "bindSpike_IgG_%s_BA.2.86",
+          "bindSpike_IgG_%s_XBB.1.5", "bindSpike_IgG_%s_JN.1", "bindSpike_IgG_%s_KP.2", "bindSpike_IgG_%s_KP.3",
+          "bindSpike_IgG_%s_LB.1", "bindN_IgG_%s")
+
+allmrks <- sprintf(rep(mrks, 3), rep(c("sera", "nasal", "saliva"), each=length(mrks)))
+
+allmrks_lev <- assay_metadata$assay_label_short[match(allmrks, assay_metadata$assay)]
+
+
+gm.v <- apply(expand.grid(times, assay_metadata$assay), 1, paste, collapse="")
+gm.v <- intersect(gm.v, names(ds))
+gm.v <- gm.v[sapply(gm.v, function(x)!all(is.na(ds[, x])))]
+
+resp.v <- paste0(gm.v, "Resp")
+resp.v <- intersect(resp.v, names(ds))
 resp.v <- resp.v[sapply(resp.v, function(x)!all(is.na(ds[, x])))]
+
+# gm.v <- unlist(sapply(allmrks, function(x)grep(x, names(ds), value = T)) )
+# gm.v <- gm.v[!grepl('cat|FR2|FR4|Resp', gm.v)]
+# gm.v <- unname(gm.v[sapply(gm.v, function(x)!all(is.na(ds[, x])))])
+# 
+# resp.v <- sapply(paste0(allmrks, "Resp"), function(x)grep(x, names(ds), value = T)) 
+# resp.v <- unique(resp.v[sapply(resp.v, function(x)!all(is.na(ds[, x])))])
 
 if (study_name%in%c("COVE")) {
   subs <- c("All", "AgeC", "HighRiskC", "AgeRiskC", "AgeRisk1", "AgeRisk2", "SexC",
@@ -674,63 +666,51 @@ if (study_name%in%c("COVE")) {
 } else if (study_name %in% c("PROFISCOV")) {
   subs <- c("All", "AgeC", "HIVC", "HighRiskC", "AgeRiskC", "AgeRisk1", "AgeRisk2", "SexC",
             "AgeSexC", "ethnicityC", "RaceEthC", "URMC", "AgeURM")
+} else {
+  subs <- "All"
 }
 
-rpcnt <- get_rr(dat=ds, v=resp.v, subs=subs, sub.by=sub.by, strata="tps.stratum",
-                weights=paste0("wt.", "AB."[grepl("AB", config.cor$ph1)], "immuno"), 
+if (!grepl("AB", config.cor$ph1)){
+
+resp.v31 <- grep("Day31|Day181", resp.v, value=T)
+resp.v91 <- grep("Day91|Day366", resp.v, value=T)
+  
+  
+rpcnt <- get_rr(dat=ds, v=resp.v31, subs=subs, sub.by=sub.by, strata="tps.stratum",
+                weights=paste(c(unlist(strsplit(config.cor$wt, ".", fixed=T))[1:2], "immuno"), collapse = "."), 
                 subset=paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))
 
 tab_rr <- rpcnt %>% 
   dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2") & Visit != "Day 1" & Group %in% names(grplev)) %>% 
-  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
+  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), 
+         Group=factor(grplev[Group], levels=grplev)) %>% 
   pivot_wider(
     id_cols = c(subgroup, Group, Arm, Marker, Visit, N),
     names_from = Ind, values_from = rslt) %>% 
+  mutate(Marker=factor(Marker)) %>% 
   arrange(subgroup, Group, Visit, Arm, Marker)
 
-if(any(grepl("bind", assays))){
-  
-  if (all(c("% Greater than 2xLLOQ", "% Greater than 4xLLOQ") %in% names(tab_rr))){
-    tab_bind1 <- tab_rr %>% 
-      dplyr::filter(Marker %in% labels_all$Marker[grep("bind", labels_all$marker)]) %>% 
-      select(subgroup, Group, Visit, Arm, Marker, N, Responder, 
-             c("% Greater than 2xLLOQ", "% Greater than 4xLLOQ"))
-  }
-  
-  tab_bind2 <- tab_rr %>% 
-    dplyr::filter(Marker %in% labels_all$Marker[grep("bind", labels_all$marker)]) %>% 
-    select(subgroup, Group, Visit, Arm, Marker, N, Responder)
-}
+
+rpcnt_A <- get_rr(dat=ds, v=resp.v91, subs=subs, sub.by=sub.by, strata="tps.stratum",
+                  weights=paste(c(unlist(strsplit(config.cor$wt, ".", fixed=T))[1:2], "immuno"), collapse = "."), 
+                  # subset="ph2.AB.trackA")
+                  subset=paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))
+                  
+
+
+tab_rr_A <- rpcnt_A %>% 
+  dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2") & Visit != "Day 1" & Group %in% names(grplev)) %>% 
+  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), 
+         Group=factor(grplev[Group], levels=grplev)) %>% 
+  pivot_wider(
+    id_cols = c(subgroup, Group, Arm, Marker, Visit, N),
+    names_from = Ind, values_from = rslt) %>% 
+  mutate(Marker=factor(Marker)) %>% 
+  arrange(subgroup, Group, Visit, Arm, Marker)
+
 
 print("Done with table2") 
 
-# Table 3 & 4. For the ID50 pseudo-virus & MN50 WT live virus neutralization 
-# antibody marker, the estimated percentage of participants defined as 
-# responders, participants with % 2-Fold Rise (2FR), and participants with 4-fold 
-# rise (4FR) will be provided with the corresponding 95% CIs 
-# 
-# Output: tab_pseudo & tab_wt
-
-if(any(grepl("pseudoneutid50", assays))){
-tab_pseudo <- tab_rr %>% 
-  dplyr::filter(Marker %in% labels_all$Marker[grep("pseudoneutid50", labels_all$marker)]) %>% 
-  select(subgroup, Group, Visit, Arm, `Baseline SARS-CoV-2`, Marker, N, Responder
-         #,`% 2-Fold Rise`, `% 4-Fold Rise`
-         )
-}else{
-  tab_pseudo <- NULL
-}
-
-if(any(grepl("T4|T8", assays))){
-tab_t <- tab_rr %>% 
-  dplyr::filter(Marker %in% labels_all$Marker[grep("T4|T8", labels_all$marker)]) %>% 
-  select(subgroup, Group, Visit, Arm, `Baseline SARS-CoV-2`, Marker, N, Responder
-        # ,`% 2-Fold Rise`, `% 4-Fold Rise`
-        )
-}else{
-  tab_t <- NULL
-}
-print("Done with table3 & 4") 
 
 # Table 5. Geometric mean titers (GMTs) and geometric mean concentrations (GMCs)
 # will be summarized along with their 95% CIs using the t-distribution
@@ -739,18 +719,39 @@ print("Done with table3 & 4")
 # and WT live virus-nAb MN50, as well as for binding Ab to N).
 # 
 # Output: tab_gm
-gm.v <- c(assays_col, grep("Delta", names(ds), value = T))
-gm.v <- gm.v[!grepl('cat', gm.v)]
-gm.v <- gm.v[sapply(gm.v, function(x)!all(is.na(ds[, x])))]
-rgm <- get_gm(dat=ds, v=gm.v, subs=subs, sub.by=sub.by, strata="tps.stratum",
-              weights=paste0("wt.", "AB."[grepl("AB", config.cor$ph1)], "immuno"), 
+
+gm.vB <- gm.v[substr(gm.v, 1, 1)=="B"]
+
+gm.v31 <- c(gm.vB, unique(grep("Day31|Delta31overB|Day181|Delta181overB", gm.v, value = T)))
+gm.v91 <- c(gm.vB, unique(grep("Day91|Delta91overB|Day366|Delta366overB", gm.v, value = T)))
+
+rgm <- get_gm(dat=ds, v=gm.v31, subs=subs, sub.by=sub.by, strata="tps.stratum",
+              weights=paste(c(unlist(strsplit(config.cor$wt, ".", fixed=T))[1:2], "immuno"), collapse = "."), 
               subset=paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))
 
 tab_gm <- rgm %>% 
   dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2") & !grepl("Delta", mag_cat) & Group %in% names(grplev)) %>% 
-  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
-  arrange(subgroup, Group, Visit, Arm, `Baseline SARS-CoV-2`, Marker) %>% 
-  select(subgroup, Group, Visit, Arm, `Baseline SARS-CoV-2`, Marker, N, `GMT/GMC`) 
+  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), 
+         Group=factor(grplev[Group], levels=grplev)#,
+         # Visit=factor(Visit, levels=paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))
+         ) %>% 
+  arrange(subgroup, Group, Visit, Arm, Marker) %>%
+  select(subgroup, Group, Visit, Arm, Marker, N, `GMT/GMC`) 
+
+
+rgm_A <- get_gm(dat=ds, v=gm.v91, subs=subs, sub.by=sub.by, strata="tps.stratum",
+              weights=paste(c(unlist(strsplit(config.cor$wt, ".", fixed=T))[1:2], "immuno"), collapse = "."), 
+              subset=paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))
+
+tab_gm_A <- rgm_A %>% 
+  dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2") & !grepl("Delta", mag_cat) & Group %in% names(grplev)) %>% 
+  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), 
+         Group=factor(grplev[Group], levels=grplev)#,
+         # Visit=factor(Visit, levels=paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))
+         ) %>% 
+  arrange(subgroup, Group, Visit, Arm, Marker) %>%
+  select(subgroup, Group, Visit, Arm, Marker, N, `GMT/GMC`) 
+
 
 print("Done with table5") 
 
@@ -761,14 +762,14 @@ print("Done with table5")
 # Output: tab_gmr
 
 gmr_gm <- inner_join(
-  tab_gm %>% 
+ tab_gm %>% 
     dplyr::filter(Visit == "Day 01") %>% 
     select(-Visit) %>% 
     rename(`Baseline\nGMT/GMC` = `GMT/GMC`),
-  tab_gm %>% 
+ tab_gm %>% 
     dplyr::filter(Visit != "Day 01") %>% 
     rename(`Post Baseline\nGMT/GMC` = `GMT/GMC`),
-  by = c("subgroup", "Arm", "Group", "Baseline SARS-CoV-2", "N", "Marker")) %>% 
+  by = c("subgroup", "Group", "Arm", "N", "Marker")) %>% 
   dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2")) %>% 
   mutate(Visit = paste0(gsub("ay ", "", Visit), " fold-rise over D01"))
 
@@ -776,15 +777,83 @@ tab_gmr <- rgm %>%
   dplyr::filter(grepl("overB", mag_cat)) %>%
   mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
          subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
-  select(subgroup, Group, Arm, `Baseline SARS-CoV-2`, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
   inner_join(
     gmr_gm,
-    c("subgroup", "Group", "Arm", "Baseline SARS-CoV-2", "Visit", "N", "Marker")) %>% 
-  arrange(subgroup, Group, Visit, Arm, `Baseline SARS-CoV-2`, Marker) %>% 
-  mutate(Arm=gsub("vaccine", "", Arm)) %>% 
-  select(subgroup, Group, Visit, Arm, #`Baseline SARS-CoV-2`, 
+    c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
+  mutate(Marker=factor(Marker, levels=allmrks_lev), 
+         Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  filter(!is.na(Marker)) %>% 
+  arrange(subgroup, Group, Visit, Arm, Marker) %>% 
+  select(Arm, Visit,
          Marker, N,  
-         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`) 
+         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
+
+
+tab_gmr_all <- rgm %>% 
+  dplyr::filter(grepl("overB", mag_cat)) %>%
+  mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
+         subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  inner_join(
+    gmr_gm,
+    c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
+  rowwise() %>% 
+  mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
+         Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
+         Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  arrange(subgroup, Group, Visit, Arm, Bsample, Marker) %>% 
+  select(Arm, Visit,
+         Marker, N,  
+         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
+
+
+
+gmr_gm_A <- inner_join(
+  tab_gm_A %>% 
+    dplyr::filter(Visit == "Day 01") %>% 
+    select(-c(Visit, N)) %>% 
+    rename(`Baseline\nGMT/GMC` = `GMT/GMC`),
+  tab_gm_A %>% 
+    dplyr::filter(Visit != "Day 01") %>% 
+    rename(`Post Baseline\nGMT/GMC` = `GMT/GMC`),
+  by = c("subgroup", "Group", "Arm", "Marker")) %>% 
+  dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2")) %>% 
+  mutate(Visit = paste0(gsub("ay ", "", Visit), " fold-rise over D01"))
+
+tab_gmr_A <- rgm_A %>% 
+  dplyr::filter(grepl("overB", mag_cat)) %>%
+  mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
+         subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  inner_join(
+    gmr_gm_A,
+    c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
+  mutate(Marker=factor(Marker, levels=allmrks_lev), 
+    Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  filter(!is.na(Marker)) %>%
+  arrange(subgroup, Group, Visit, Arm, Marker) %>% 
+  select(Arm, Visit,
+         Marker, N,  
+         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
+
+
+tab_gmr_all_A <- rgm_A %>% 
+  dplyr::filter(grepl("overB", mag_cat)) %>%
+  mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
+         subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  inner_join(
+    gmr_gm_A,
+    c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
+  rowwise() %>% 
+  mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
+         Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
+         Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  arrange(subgroup, Group, Visit, Arm, Marker) %>% 
+  select(Arm, Visit,
+         Marker, N,  
+         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
 
 print("Done with table6") 
 
@@ -795,59 +864,95 @@ print("Done with table6")
 # 
 # Ratios of GMT/GMC between subgroups among vacinees
 
-
-comp_lev <- c("Comparator vaccine", "Investigational vaccine", 
-              labels.age[2:1],
-              "Male", "Female")
-
-groups <- c("AgeC", "SexC")
-
-
-mag_groups <- assays_col
+comp_lev <- c("Comparator Vaccine", "Investigational Vaccine")
+mag_groups <- gm.v
 mag_groups <- mag_groups[sapply(mag_groups, function(x)!all(is.na(ds[,x])))]
+mag_groups.v31 <- unique(grep("Day31|Delta31overB|Day181|Delta181overB", mag_groups, value = T))
+mag_groups.v91 <- unique(grep("Day91|Delta91overB|Day366|Delta366overB", mag_groups, value = T))
 
-rgmt <- get_rgmt(ds, mag_groups, groups, comp_lev=comp_lev, 
-                 sub.by, "tps.stratum", paste0("wt.", "AB."[grepl("AB", config.cor$ph1)], "immuno"), 
-                 paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))
 
-rgmt_ <- get_rgmt(ds, mag_groups, "Arm", comp_lev=c("Comparator vaccine", "Investigational vaccine"), 
-                  c("All", "`Baseline SARS-CoV-2`"), "tps.stratum", 
-                  paste0("wt.", "AB."[grepl("AB", config.cor$ph1)], "immuno"), 
+rgmt <- get_rgmt(ds, mag_groups.v31, "Arm", comp_lev=c("Comparator Vaccine", "Investigational Vaccine"), 
+                  c("All"), "tps.stratum", 
+                  weights=paste(c(unlist(strsplit(config.cor$wt, ".", fixed=T))[1:2], "immuno"), collapse = "."), 
                   paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))
 
-rgmt_ <- rgmt_ %>% mutate(subgroup="All", Arm="-")
+rgmt <- rgmt %>% mutate(subgroup="All", Arm="-")
 
 rgmt_gm <- rgm %>% 
-  dplyr::filter(!grepl("Delta", mag_cat) & Group %in% names(grplev)) %>% 
-  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
-  dplyr::filter(subgroup %in% subgrp[groups]) %>% 
-  mutate(groupn = 2-match(Group, comp_lev)%%2) %>% 
-  pivot_wider(id_cols = c(subgroup, Arm, `Baseline SARS-CoV-2`, Visit, Marker),
-              names_from = groupn, values_from = `GMT/GMC`, 
-              names_prefix = "Group")
-
-rgmt_gm_ <- rgm %>% 
   dplyr::filter(!grepl("Delta", mag_cat) & Group=="All participants") %>% 
   mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
   mutate(groupn = 2-match(Arm, comp_lev)%%2, Arm="-") %>% 
-  pivot_wider(id_cols = c(subgroup, Arm, `Baseline SARS-CoV-2`, Visit, Marker),
+  distinct() %>% 
+  pivot_wider(id_cols = c(subgroup, Arm, Visit, Marker),
               names_from = groupn, values_from = `GMT/GMC`, 
               names_prefix = "Group")
 
 
-tab_rgmt <- inner_join(bind_rows(rgmt_gm_, rgmt_gm), 
-                       bind_rows(rgmt_, rgmt) %>% mutate(subgroup=factor(subgrp[subgroup], levels=subgrp)),  
-                       c("Baseline SARS-CoV-2", "Arm", "subgroup", "Marker", "Visit")) %>% 
-  rename(`Group 1 vs 2` = comp, 
-         `Group 1 GMT/GMC` = `Group1`, 
-         `Group 2 GMT/GMC` = `Group2`) %>% 
-  select(`Group 1 vs 2`, subgroup, Visit, Arm, 
-         # `Baseline SARS-CoV-2`, 
-         Marker, 
-         `Group 1 GMT/GMC`, `Group 2 GMT/GMC`, `Ratios of GMT/GMC`) %>% 
-  arrange(subgroup, Visit, Arm, 
-          # `Baseline SARS-CoV-2`, 
-          Marker)
+tab_rgmt <- inner_join(rgmt_gm, 
+                       rgmt %>% mutate(subgroup=factor(subgrp[subgroup], levels=subgrp)),  
+                       c("Arm", "subgroup", "Marker", "Visit")) %>% 
+  mutate(Visit=factor(Visit, levels=c("Day 01", paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))),
+         Marker=factor(Marker, levels=allmrks_lev)) %>% 
+  filter(!is.na(Marker)) %>% 
+  select(Comparison=comp, Visit, Marker, 
+         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`) %>% 
+  arrange(Visit, Marker)
+
+
+tab_rgmt_all <- inner_join(rgmt_gm, 
+                       rgmt %>% mutate(subgroup=factor(subgrp[subgroup], levels=subgrp)),  
+                       c("Arm", "subgroup", "Marker", "Visit")) %>% 
+  rowwise() %>% 
+  mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
+         Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
+         Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  arrange(Visit, Bsample, Marker) %>% 
+  select(Comparison=comp, Visit, Marker, 
+         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`)
+
+
+
+rgmt_A <- get_rgmt(ds, mag_groups.v91, "Arm", comp_lev=c("Comparator Vaccine", "Investigational Vaccine"), 
+                 c("All"), "tps.stratum", 
+                 weights=paste(c(unlist(strsplit(config.cor$wt, ".", fixed=T))[1:2], "immuno"), collapse = "."), 
+                 paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))
+
+rgmt_A <- rgmt_A %>% mutate(subgroup="All", Arm="-")
+
+rgmt_gm_A <- rgm_A %>% 
+  dplyr::filter(!grepl("Delta", mag_cat) & Group=="All participants") %>% 
+  mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
+  mutate(groupn = 2-match(Arm, comp_lev)%%2, Arm="-") %>% 
+  distinct() %>% 
+  pivot_wider(id_cols = c(subgroup, Arm, Visit, Marker),
+              names_from = groupn, values_from = `GMT/GMC`, 
+              names_prefix = "Group")
+
+
+tab_rgmt_A <- inner_join(rgmt_gm_A, 
+                       rgmt_A %>% mutate(subgroup=factor(subgrp[subgroup], levels=subgrp)),  
+                       c("Arm", "subgroup", "Marker", "Visit")) %>% 
+  mutate(Visit=factor(Visit, levels=c("Day 01", paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))),
+         Marker=factor(Marker, levels=allmrks_lev)) %>% 
+  filter(!is.na(Marker)) %>% 
+  select(Comparison=comp, Visit, Marker, 
+         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`) %>% 
+  arrange(Visit, Marker)
+
+
+tab_rgmt_all_A <- inner_join(rgmt_gm_A, 
+                         rgmt_A %>% mutate(subgroup=factor(subgrp[subgroup], levels=subgrp)),  
+                         c("Arm", "subgroup", "Marker", "Visit")) %>% 
+  rowwise() %>% 
+  mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
+         Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
+         Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  arrange(Visit, Bsample, Marker) %>% 
+  select(Comparison=comp, Visit, Marker, 
+         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`)
+  
+
+
 
 print("Done with table7") 
 
@@ -856,49 +961,111 @@ print("Done with table7")
 # method without continuity correction (Newcombe, 1998).
 # Output: tab_rrdiff
 
-tab_rrdiff <- bind_rows(
-                        rpcnt %>%
-                          dplyr::filter(subgroup=="All") %>%
-                          mutate(Group=Arm, Arm="-"),
-                        # rpcnt %>% 
-                        #   dplyr::filter(subgroup=="All") %>% 
-                        #   mutate(Group=`Baseline SARS-CoV-2`, `Baseline SARS-CoV-2`="-"),
-                        rpcnt)%>% 
-  dplyr::filter(subgroup %in% c(groups, "All") & grepl("Resp|FR2|FR4",resp_cat)) %>% 
+tab_rrdiff <- rpcnt %>%
+  mutate(Group=Arm, Arm="-") %>% 
   mutate(groupn = 2-match(Group, c(comp_lev, "Vaccine", "Placebo", "Positive", "Negative"))%%2) %>% 
-  pivot_wider(id_cols = c(subgroup, Arm, `Baseline SARS-CoV-2`, Marker, Visit, Ind),
+  pivot_wider(id_cols = c(subgroup, Arm, Marker, Visit, Ind),
               names_from = groupn, values_from = c(response, ci_l, ci_u), names_sep = "") %>% 
-  full_join(distinct(rgmt, subgroup, comp)) %>% 
-  mutate(Comparison = case_when(Arm=="-"~"Comparator vaccine vs Investigational vaccine",
-                          `Baseline SARS-CoV-2`=="-"~"Positive vs Negative",
-                          TRUE~comp),
-         subgroup = factor(case_when(Arm=="-" ~ "Arm",
-                           `Baseline SARS-CoV-2`=="-" ~ "Baseline SARS-CoV-2",
-                            TRUE~subgrp[subgroup]), levels=c("Arm", "Baseline SARS-CoV-2", subgrp)),
+  mutate(Comparison = "Comparator Vaccine vs Investigational Vaccine",
          Estimate = response1-response2,
          ci_l = Estimate-sqrt((response1-ci_l1)^2+(response2-ci_u2)^2),
          ci_u = Estimate+sqrt((response1-ci_u1)^2+(response2-ci_l2)^2),
          rslt = ifelse(is.na(Estimate), "-", 
                        sprintf("%s\n(%s, %s)", round(Estimate,2), round(ci_l,2), round(ci_u,2)))) %>%
-  dplyr::filter(!is.na(Comparison)) %>%
-  pivot_wider(id_cols=c(Comparison, subgroup, `Baseline SARS-CoV-2`, Arm, Visit, Marker), 
+  pivot_wider(id_cols=c(Comparison, subgroup, Arm, Visit, Marker), 
               names_from = Ind, values_from = rslt) %>%
-  select(Comparison, subgroup, `Baseline SARS-CoV-2`, Arm, Visit, Marker, 
-         `Responder Rate Difference`=Responder#, `% 2-Fold Rise`, `% 4-Fold Rise`
+  select(Comparison, subgroup, Visit, Marker, 
+         `Responder Rate Difference`=Responder
          ) %>% 
-  arrange(subgroup, Visit, `Baseline SARS-CoV-2`, Marker, Comparison) 
+  arrange(subgroup, Visit, Marker, Comparison) 
 
-print("Done with table8") 
 
 # renameing for ICS
 
-if(grepl("AB", config.cor$ph1)){
-  names(tab_gm) <- gsub("GMT/GMC", "GMR", names(tab_gm))
-  names(tab_gmr) <- gsub("GMT/GMC", "GMR", names(tab_gmr))
-  names(tab_gmr) <- gsub("GMTR/GMCR", "GMRR", names(tab_gmr))
-  names(tab_rgmt) <- gsub("GMT/GMC", "GMR", names(tab_rgmt))
-}
+tab_rr_diff <- tab_rr %>% 
+  pivot_wider(id_cols=c(Marker, Visit), names_from = Arm, values_from = c(N, Responder)) %>% 
+  full_join(tab_rrdiff %>% distinct(Visit, Marker, `Responder Rate Difference`)) %>% 
+  mutate(Visit=factor(Visit, levels=paste0("Day ", sort(as.numeric(gsub("Day", "", times))))),
+         Marker=factor(Marker, levels=allmrks_lev)) %>% 
+  filter(!is.na(Marker)) %>% 
+  select(Visit, Marker, `N_Investigational Vaccine`, `Responder_Investigational Vaccine`, 
+         `N_Comparator Vaccine`, `Responder_Comparator Vaccine`, 
+         `Responder Rate Difference`) %>% 
+  arrange(Visit, Marker)
 
+
+tab_rr_diff_all <- tab_rr %>% 
+  pivot_wider(id_cols=c(Marker, Visit), names_from = Arm, values_from = c(N, Responder)) %>% 
+  full_join(tab_rrdiff %>% distinct(Visit, Marker, `Responder Rate Difference`)) %>% 
+  rowwise() %>% 
+  mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
+         Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
+         Visit=factor(Visit, levels=sprintf("Day %s", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  arrange(Visit, Bsample, Marker) %>% 
+  select(Visit, Marker, `N_Investigational Vaccine`, `Responder_Investigational Vaccine`, 
+         `N_Comparator Vaccine`, `Responder_Comparator Vaccine`, 
+         `Responder Rate Difference`) 
+
+
+
+tab_rrdiff_A <- rpcnt_A %>%
+  mutate(Group=Arm, Arm="-") %>% 
+  mutate(groupn = 2-match(Group, c(comp_lev, "Vaccine", "Placebo", "Positive", "Negative"))%%2) %>% 
+  pivot_wider(id_cols = c(subgroup, Arm, Marker, Visit, Ind),
+              names_from = groupn, values_from = c(response, ci_l, ci_u), names_sep = "") %>% 
+  mutate(Comparison = "Comparator Vaccine vs Investigational Vaccine",
+         Estimate = response1-response2,
+         ci_l = Estimate-sqrt((response1-ci_l1)^2+(response2-ci_u2)^2),
+         ci_u = Estimate+sqrt((response1-ci_u1)^2+(response2-ci_l2)^2),
+         rslt = ifelse(is.na(Estimate), "-", 
+                       sprintf("%s\n(%s, %s)", round(Estimate,2), round(ci_l,2), round(ci_u,2)))
+         ) %>%
+  pivot_wider(id_cols=c(Comparison, subgroup, Arm, Visit, Marker), 
+              names_from = Ind, values_from = rslt) %>%
+  select(Comparison, subgroup, Visit, Marker, 
+         `Responder Rate Difference`=Responder#, `% 2-Fold Rise`, `% 4-Fold Rise`
+  ) %>% 
+  arrange(subgroup, Visit, Marker, Comparison) 
+
+
+# renameing for ICS
+
+tab_rr_diff_A <- tab_rr_A %>% 
+  pivot_wider(id_cols=c(Marker, Visit), names_from = Arm, values_from = c(N, Responder)) %>% 
+  full_join(tab_rrdiff_A %>% select(Visit, Marker, `Responder Rate Difference`)) %>% 
+  mutate(Visit=factor(Visit, levels=paste0("Day ", sort(as.numeric(gsub("Day", "", times))))),
+         Marker=factor(Marker, levels=allmrks_lev)) %>% 
+  filter(!is.na(Marker)) %>% 
+  select(Visit, Marker, `N_Investigational Vaccine`, `Responder_Investigational Vaccine`, 
+         `N_Comparator Vaccine`, `Responder_Comparator Vaccine`, 
+         `Responder Rate Difference`) %>% 
+  arrange(Visit, Marker)
+print("Done with table8") 
+
+
+tab_rr_diff_all_A <- tab_rr_A %>% 
+  pivot_wider(id_cols=c(Marker, Visit), names_from = Arm, values_from = c(N, Responder)) %>% 
+  full_join(tab_rrdiff_A %>% select(Visit, Marker, `Responder Rate Difference`)) %>% 
+  rowwise() %>% 
+  mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
+         Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
+         Visit=factor(Visit, levels=sprintf("Day %s", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+  arrange(Visit, Marker) %>% 
+  select(Visit, Marker, `N_Investigational Vaccine`, `Responder_Investigational Vaccine`, 
+         `N_Comparator Vaccine`, `Responder_Comparator Vaccine`, 
+         `Responder Rate Difference`) %>% 
+  arrange(Visit, Marker)
+print("Done with table8") 
+
+
+# if(grepl("AB", config.cor$ph1)){
+#   names(tab_gm) <- gsub("GMT/GMC", "GMR", names(tab_gm))
+#   names(tab_gmr) <- gsub("GMT/GMC", "GMR", names(tab_gmr))
+#   names(tab_gmr) <- gsub("GMTR/GMCR", "GMRR", names(tab_gmr))
+#   names(tab_rgmt) <- gsub("GMT/GMC", "GMR", names(tab_rgmt))
+# }
+
+}
 
 
 

@@ -906,10 +906,10 @@ if (exists("COR")) {
     #   prevent19_stage2, azd1222_stage2 because CoR only
     if (!TRIAL %in% c("janssen_partA_VL", "vat08_combined", "id27hpv", "id27hpvnAb", "covail", "covail_sanofi", "covail_tcell", "covail_frnt", "covail_xassays", "prevent19_stage2", "azd1222_stage2", "iliad_ib202p", "iliad_ib201p")) {
       prev.vacc = get.marginalized.risk.no.marker(form.0, subset(dat_proc, Trt==1 & ph1), tfinal.tpeak)
-      prev.plac = get.marginalized.risk.no.marker(form.0, subset(dat_proc, Trt==0 & ph1), tfinal.tpeak)   
-      overall.ve = c(1 - prev.vacc/prev.plac) 
+      prev.plac = get.marginalized.risk.no.marker(form.0, subset(dat_proc, Trt==0 & ph1), tfinal.tpeak)
+      overall.ve = c(1 - prev.vacc/prev.plac)
       myprint(prev.plac, prev.vacc, overall.ve)
-    } 
+    }
     
     #        # get VE in the first month or two of followup
     #        dat.tmp=dat_proc
