@@ -80,7 +80,7 @@ else ifeq ($(TRIAL),$(filter $(TRIAL), vat08_combined))
 	Rscript code/make_table_all_sanofi.R D22vat08_combined_M6_bAb
 	Rscript code/make_table_all_sanofi.R D43vat08_combined_M6_bAb
 else ifeq ($(TRIAL),$(filter $(TRIAL), nextgen_mock)) # janssen_sa_partAsenior has too few cases
-	Rscript code/make_table_all_nextGen.R D31toM6_nextgen_mock_sera
+##Rscript code/make_table_all_nextGen.R D31toM6_nextgen_mock_sera
 	Rscript code/make_table_all_nextGen.R D31toM12_nextgen_mock_sera
 endif
 
