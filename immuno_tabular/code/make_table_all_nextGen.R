@@ -11,6 +11,7 @@ source(here::here("code", "make_functions_nextGen.R"))
 library(survey)
 library(tidyverse)
 library(dplyr, warn.conflicts = FALSE)
+library(lubridate)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)
 # For stratum with 1 ppt
@@ -25,7 +26,7 @@ randomsubcohort <- case_when(study_name=="COVE" ~ "This table summarizes the
       sampling was stratified by 24 strata defined by enrollment characteristics: Assigned 
       treatment arm $\\\\times$ Baseline SARS-CoV-2 naïve vs. non-naïve status 
       (defined by serostatus and NAAT testing) $\\\\times$ Randomization strata 
-      (Age < 65 and at-risk, Age < 65 and not at-risk, Age $\\\\geq 65)\\\\times$ 
+      (Age < 65 and at-risk, Age < 65 and not at-risk, Age $\\geq$ 65)\\\\times$ 
       Communities of color (Yes/No) defined by White Non-Hispanic vs. all 
       others (following the primary COVE trial paper).",
                              
@@ -50,6 +51,9 @@ randomsubcohort <- case_when(study_name=="COVE" ~ "This table summarizes the
 
 tlf <-
   list(
+    
+    tab_strtm1 = list(),
+    
     tab_dm = list(
       table_header = paste0("Demographics of participants with ",
                             "serum, nasal fluid, and saliva antibody data "[!grepl("AB", config.cor$ph1)],
@@ -67,6 +71,7 @@ tlf <-
       col1="5cm"
     ),
     
+    
     tab_dm_A = list(
       table_header = paste0("Demographics of Track A RIS participants with ",
                             "serum, nasal fluid, and saliva antibody data "[!grepl("AB", config.cor$ph1)],
@@ -83,36 +88,52 @@ tlf <-
       col1="5cm"
     ),
     
-    tab_strtm1 = list(),
     
     tab_rr_diff = list(
-      table_header = "Response frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and CI estimates use IPS weights. Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
-                      (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_header = "Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+                      Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                      (RIS-sera, RIS-nasal, RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
+                      or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
+                      and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
+                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
     
     tab_rr_diff_all = list(
-      table_header = "Response frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and CI estimates use IPS weights. (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_header ="Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+                      (RIS-sera, RIS-nasal, RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
+                      or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
+                      and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
+                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
     
     tab_rr_diff_A = list(
-      table_header = "Response frequencies of IgG-bAb markers at D91 and D366 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and CI estimates use IPS weights. Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
-                      (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_header = "Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+                      Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
+                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
+                      or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
+                      and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
+                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
     tab_rr_diff_all_A = list(
-      table_header = "Response frequencies of IgG-bAb markers at D91 and D366 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and CI estimates use IPS weights. (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+      table_header = "Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+                      (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
+                      or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
+                      and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
+                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
@@ -120,7 +141,7 @@ tlf <-
     
     tab_gmr = list(
       table_header = "Geometric mean values of IgG-bAb markers at D01, D31, and D181 by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
@@ -128,7 +149,7 @@ tlf <-
     
     tab_gmr_all = list(
       table_header = "Geometric mean values of IgG-bAb markers at D01, D31, and D181 by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
       col1="2cm"),
@@ -136,7 +157,7 @@ tlf <-
     
     tab_gmr_A = list(
       table_header = "Geometric mean values of IgG-bAb markers at D01, D91, and D366 by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
@@ -144,41 +165,37 @@ tlf <-
     
     tab_gmr_all_A = list(
       table_header = "Geometric mean values of IgG-bAb markers at D01, D91, and D366 by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
       col1="2cm"),
     
     tab_rgmt = list(
       table_header = "Geometric mean values of IgG-bAb markers by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
-      table_footer = " ",
-      col1="4cm"),
+      table_footer = " "),
     
     
     tab_rgmt_all = list(
       table_header = "Geometric mean values of IgG-bAb markers by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
-      table_footer = " ",
-      col1="4cm"),
+      table_footer = " "),
     
     tab_rgmt_A = list(
       table_header = "Geometric mean values of IgG-bAb markers by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
-      table_footer = " ",
-      col1="4cm"),
+      table_footer = " "),
     
     tab_rgmt_all_A = list(
       table_header = "Geometric mean values of IgG-bAb markers by Investigational 
-                      and Comparator Vaccine arm and their comparisons. Point and CI estimates use IPS weights. 
+                      and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
-      table_footer = " ",
-      col1="4cm")
+      table_footer = " ")
     )
 
 # Depends on the Incoming data
@@ -266,7 +283,6 @@ dat <- dat_proc
 # The stratified random cohort for immunogenicity
 
 ds_s <- dat %>%
-  ################################################################
 # dplyr::filter(ph1==1) %>%
   mutate(
     raceC = "", #as.character(race),
@@ -285,6 +301,7 @@ ds_s <- dat %>%
     ),
     HighRiskC = ifelse(HighRiskInd == 1, "At-risk", "Not at-risk"),
     AgeC = ifelse(is.na(Senior), ifelse(age.geq.65 == 1, labels.age[2], labels.age[1]), ifelse(Senior == 1, labels.age[2], labels.age[1])),
+    BMIC = ifelse(BMI<35, "BMI $<$ 35", "BMI $\\geq$ 35"),
     SexC = ifelse(Sex == 1, "Female", "Male"),
     AgeRiskC = paste(AgeC, HighRiskC),
     AgeSexC = paste(AgeC, SexC),
@@ -300,7 +317,8 @@ ds_s <- dat %>%
                                    age.geq.65 == 0 & HighRiskInd==0 ~ 9), 
     AgeRisk1 = ifelse(AgeC==labels.age[1], AgeRiskC, NA),
     AgeRisk2 = ifelse(AgeC==labels.age[2], AgeRiskC, NA),
-    All = "All participants"
+    All = "All participants", 
+    N = " "
   ) 
 
 if(study_name %in% c("ENSEMBLE", "MockENSEMBLE", "PREVENT19")){
@@ -359,6 +377,7 @@ names(pos.cutoffs) <- assay_metadata$assay
 # }
 
 subgrp <- c(
+  N = "N",
   All = "All participants", 
   AgeC = "Age",
   BMI="BMI",
@@ -375,10 +394,11 @@ subgrp <- c(
   URMC = "Underrepresented Minority Status in the U.S.",
   AgeURM = "Age, Underrepresented Minority Status in the U.S.",
   CountryC = "Country",
-  HIVC = "HIV Infection"
+  HIVC = "HIV Infection",
+  CalendarDateEnrollment = "Enrollment Date"
 )
 
-grplev <- c("", labels.age, "At-risk", "Not at-risk", 
+grplev <- c(" ", labels.age, "At-risk", "Not at-risk", 
             paste(labels.age[1], c("At-risk", "Not at-risk")),
             paste(labels.age[2], c("At-risk", "Not at-risk")),
             "Male", "Female", 
@@ -400,7 +420,10 @@ grplev <- c("", labels.age, "At-risk", "Not at-risk",
 names(grplev) <- c("All participants", grplev[-1])
 
 
-char_lev <- c(labels.age, "Mean $\\pm$ SD (Range)", "Mean (Range)","Mean $\\pm$ SD",
+char_lev <- c(" ",
+              labels.age, 
+              "BMI $<$ 35", "BMI $\\geq$ 35",
+              "Mean $\\pm$ SD (Range)", "Mean ($\\pm$ SD)", "Median (Range)",
               "Female","Male", "White", "Black or African American",
               "Asian", "American Indian or Alaska Native",
               "Native Hawaiian or Other Pacific Islander", "Multiracial",
@@ -419,10 +442,10 @@ if (study_name %in% c("COVE")) {
   num_v2 <- c("BMI") # Summaries - Mean & St.d
   cat_v <- c("AgeC", "SexC", "raceC", "ethnicityC", "HighRiskC", "AgeRiskC", "MinorityC")
 } else if (study_name %in% c("NextGen_Mock", "VaxArt_Mock")) {
-    num_v1 <- c("Age", "BMI") # Summaries - Mean & Range
-    num_v2 <- c("BMI") # Summaries - Mean & St.d
+    num_v1 <- c("Age", "BMI", "CalendarDateEnrollment") # Summaries - Mean & Range
+    num_v2 <- c("Age", "BMI", "CalendarDateEnrollment") # Summaries - Mean & St.d
     #cat_v <- c("AgeC", "SexC", "raceC", "ethnicityC", "AgeRiskC")
-    cat_v <- c("AgeC", "SexC", "ethnicityC", "AgeRiskC")
+    cat_v <- c("N", "AgeC", "SexC", "BMIC", "ethnicityC", "AgeRiskC")
     
 } else { #if (study_name %in% c("ENSEMBLE", "PREVENT19")) {
   num_v1 <- c("Age") # Summaries - Mean & Range
@@ -492,31 +515,38 @@ dm_cat <- inner_join(
 # Calculate mean and range for numeric covariates
 dm_num <- ds_long_ttl %>%
   dplyr::filter(subgroup %in% c(num_v1, num_v2)) %>% 
-  mutate(subgroup_cat=as.numeric(subgroup_cat)) %>%
+  mutate(subgroup_cat=as.numeric(subgroup_cat),
+         subgroup_cat=ifelse(subgroup=="CalendarDateEnrollment", ymd(ymd(FirstEnrollmentDate) + subgroup_cat), subgroup_cat)) %>%
   group_by(Arm, across(all_of(subgrp_add)), subgroup) %>%
   summarise(
     min = min(subgroup_cat, na.rm = T), 
     max = max(subgroup_cat, na.rm = T),
     mean = mean(subgroup_cat, na.rm = T),
+    median = median(subgroup_cat, na.rm = T),
     sd = sd(subgroup_cat, na.rm = T), 
-    rslt0 = sprintf("%.1f $\\pm$ %.1f (%.1f, %.1f)", sd, mean, min, max),
-    rslt1 = sprintf("%.1f (%.1f, %.1f)", mean, min, max),
-    rslt2 = sprintf("%.1f $\\pm$ %.1f", mean, sd),
+    rslt1 = sprintf("%.1f ($\\pm$ %.1f)", mean, sd), 
+    rslt2 = sprintf("%.1f (%.1f, %.1f)", median, min, max),
     N = n(),
-    .groups = 'drop'
-  ) %>% 
-  mutate(subgroup_cat = case_when(subgroup %in% num_v1 & subgroup %in% num_v2 ~ "Mean $\\pm$ SD (Range)",
-                                  subgroup %in% num_v1 ~ "Mean (Range)",
-                                  subgroup %in% num_v2 ~ "Mean $\\pm$ SD"),
-         subgroup=ifelse(subgroup=="Age", "AgeC", subgroup))
+    .groups = 'drop') %>%
+  mutate(
+    rslt2 = ifelse(subgroup=="CalendarDateEnrollment",
+                   sprintf("%s (%s, %s)", as.Date(median, origin = "1970-01-01"), as.Date(min, origin = "1970-01-01"), as.Date(max, origin = "1970-01-01")),
+                   rslt2)) %>% 
+  pivot_longer(cols=c(rslt1, rslt2)) %>% 
+  mutate(subgroup_cat = case_when(name=="rslt1" ~ "Mean ($\\pm$ SD)",
+                                  name=="rslt2" ~ "Median (Range)")) %>% 
+  filter(!(subgroup=="CalendarDateEnrollment" & name=="rslt1"))
 
 
 tab_dm <- bind_rows(dm_cat, dm_num) %>%
   mutate(rslt = case_when(subgroup %in% cat_v ~ rslt1,
-                          subgroup %in% num_v1 & subgroup %in% num_v2 ~ rslt0, 
-                          subgroup %in% num_v1 ~ rslt1,
-                          subgroup %in% num_v2 ~ rslt2)) %>%
-  mutate(subgroup=ifelse(subgroup %in% c("MinorityC", "raceC"), "RaceEthC", subgroup)) %>% 
+                          subgroup %in% num_v1 ~ value,
+                          subgroup %in% num_v2 ~ value)) %>%
+  mutate(subgroup=ifelse(subgroup %in% c("MinorityC", "raceC"), "RaceEthC", subgroup),
+         subgroup=ifelse(subgroup=="Age", "AgeC", subgroup),
+         subgroup=ifelse(subgroup=="BMIC", "BMI", subgroup),
+         rslt = case_when(subgroup == "N" ~ gsub(" (100.0%)", "", rslt, fixed = T), 
+                          TRUE ~ rslt)) %>% 
   dplyr::filter(subgroup_cat %in% char_lev) %>% 
   inner_join(ds_long_ttl %>% 
                distinct(Arm, Bsample, Ptid) %>% 
@@ -566,30 +596,39 @@ dm_cat_A <- inner_join(
 # Calculate mean and range for numeric covariates
 dm_num_A <- ds_long_A %>%
   dplyr::filter(subgroup %in% c(num_v1, num_v2)) %>% 
-  mutate(subgroup_cat=as.numeric(subgroup_cat)) %>%
+  mutate(subgroup_cat=as.numeric(subgroup_cat),
+         subgroup_cat=ifelse(subgroup=="CalendarDateEnrollment", ymd(ymd(FirstEnrollmentDate) + subgroup_cat), subgroup_cat)) %>%
   group_by(Arm, across(all_of(subgrp_add)), subgroup) %>%
   summarise(
     min = min(subgroup_cat, na.rm = T), 
     max = max(subgroup_cat, na.rm = T),
     mean = mean(subgroup_cat, na.rm = T),
+    median = median(subgroup_cat, na.rm = T),
     sd = sd(subgroup_cat, na.rm = T), 
-    rslt1 = sprintf("%.1f (%.1f, %.1f)", mean, min, max),
-    rslt2 = sprintf("%.1f $\\pm$ %.1f", mean, sd),
+    rslt1 = sprintf("%.1f ($\\pm$ %.1f)", mean, sd), 
+    rslt2 = sprintf("%.1f (%.1f, %.1f)", median, min, max),
     N = n(),
-    .groups = 'drop'
-  ) %>% 
-  mutate(subgroup_cat = case_when(subgroup %in% num_v1 & subgroup %in% num_v2 ~ "Mean $\\pm$ SD (Range)",
-                                  subgroup %in% num_v1 ~ "Mean (Range)",
-                                  subgroup %in% num_v2 ~ "Mean $\\pm$ SD"),
-         subgroup=ifelse(subgroup=="Age", "AgeC", subgroup))
+    .groups = 'drop') %>%
+  mutate(
+    rslt2 = ifelse(subgroup=="CalendarDateEnrollment",
+                   sprintf("%s (%s, %s)", as.Date(median, origin = "1970-01-01"), as.Date(min, origin = "1970-01-01"), as.Date(max, origin = "1970-01-01")),
+                   rslt2)) %>% 
+  pivot_longer(cols=c(rslt1, rslt2)) %>% 
+  mutate(subgroup_cat = case_when(name=="rslt1" ~ "Mean ($\\pm$ SD)",
+                                  name=="rslt2" ~ "Median (Range)")) %>% 
+  filter(!(subgroup=="CalendarDateEnrollment" & name=="rslt1"))
 
 
 
 tab_dm_A <- bind_rows(dm_cat_A, dm_num_A) %>%
   mutate(rslt = case_when(subgroup %in% cat_v ~ rslt1,
-                          subgroup %in% num_v1 ~ rslt1,
-                          subgroup %in% num_v2 ~ rslt2)) %>%
-  mutate(subgroup=ifelse(subgroup %in% c("MinorityC", "raceC"), "RaceEthC", subgroup)) %>% 
+                          subgroup %in% num_v1 ~ value,
+                          subgroup %in% num_v2 ~ value)) %>%
+  mutate(subgroup=ifelse(subgroup %in% c("MinorityC", "raceC"), "RaceEthC", subgroup),
+         subgroup=ifelse(subgroup=="Age", "AgeC", subgroup),
+         subgroup=ifelse(subgroup=="BMIC", "BMI", subgroup),
+         rslt = case_when(subgroup == "N" ~ gsub(" (100.0%)", "", rslt, fixed = T), 
+                          TRUE ~ rslt)) %>% 
   dplyr::filter(subgroup_cat %in% char_lev) %>% 
   inner_join(ds_long_A %>% 
                distinct(Arm, across(all_of(subgrp_add)),  Ptid) %>% 
@@ -684,6 +723,7 @@ tab_rr <- rpcnt %>%
   dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2") & Visit != "Day 1" & Group %in% names(grplev)) %>% 
   mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), 
          Group=factor(grplev[Group], levels=grplev)) %>% 
+  mutate(rslt = sprintf("%s %.1f%%\n%.1f%% (%.1f%%, %.1f%%)", Np, Np/N*100, response*100, ci_l*100, ci_u*100)) %>% 
   pivot_wider(
     id_cols = c(subgroup, Group, Arm, Marker, Visit, N),
     names_from = Ind, values_from = rslt) %>% 
@@ -702,6 +742,7 @@ tab_rr_A <- rpcnt_A %>%
   dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2") & Visit != "Day 1" & Group %in% names(grplev)) %>% 
   mutate(subgroup=factor(subgrp[subgroup], levels=subgrp), 
          Group=factor(grplev[Group], levels=grplev)) %>% 
+  mutate(rslt = sprintf("%s %.1f%%\n%.1f%% (%.1f%%, %.1f%%)", Np, Np/N*100, response*100, ci_l*100, ci_u*100)) %>% 
   pivot_wider(
     id_cols = c(subgroup, Group, Arm, Marker, Visit, N),
     names_from = Ind, values_from = rslt) %>% 
@@ -736,7 +777,7 @@ tab_gm <- rgm %>%
          # Visit=factor(Visit, levels=paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))
          ) %>% 
   arrange(subgroup, Group, Visit, Arm, Marker) %>%
-  select(subgroup, Group, Visit, Arm, Marker, N, `GMT/GMC`) 
+  select(subgroup, Group, Visit, Arm, Marker, N, `GM`=`GMT/GMC`) 
 
 
 rgm_A <- get_gm(dat=ds, v=gm.v91, subs=subs, sub.by=sub.by, strata="tps.stratum",
@@ -750,7 +791,7 @@ tab_gm_A <- rgm_A %>%
          # Visit=factor(Visit, levels=paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))
          ) %>% 
   arrange(subgroup, Group, Visit, Arm, Marker) %>%
-  select(subgroup, Group, Visit, Arm, Marker, N, `GMT/GMC`) 
+  select(subgroup, Group, Visit, Arm, Marker, N, `GM`=`GMT/GMC`) 
 
 
 print("Done with table5") 
@@ -765,19 +806,19 @@ gmr_gm <- inner_join(
  tab_gm %>% 
     dplyr::filter(Visit == "Day 01") %>% 
     select(-Visit) %>% 
-    rename(`Baseline\nGMT/GMC` = `GMT/GMC`),
+    rename(`Baseline\nGM` = `GM`),
  tab_gm %>% 
     dplyr::filter(Visit != "Day 01") %>% 
-    rename(`Post Baseline\nGMT/GMC` = `GMT/GMC`),
+    rename(`Post Baseline\nGM` = `GM`),
   by = c("subgroup", "Group", "Arm", "N", "Marker")) %>% 
   dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2")) %>% 
   mutate(Visit = paste0(gsub("ay ", "", Visit), " fold-rise over D01"))
 
 tab_gmr <- rgm %>% 
   dplyr::filter(grepl("overB", mag_cat)) %>%
-  mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
+  mutate(GMR=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
          subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
-  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, GMR) %>% 
   inner_join(
     gmr_gm,
     c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
@@ -787,14 +828,14 @@ tab_gmr <- rgm %>%
   arrange(subgroup, Group, Visit, Arm, Marker) %>% 
   select(Arm, Visit,
          Marker, N,  
-         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
+         `Baseline\nGM`, `Post Baseline\nGM`, GMR)
 
 
 tab_gmr_all <- rgm %>% 
   dplyr::filter(grepl("overB", mag_cat)) %>%
-  mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
+  mutate(GMR=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
          subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
-  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, GMR) %>% 
   inner_join(
     gmr_gm,
     c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
@@ -805,7 +846,7 @@ tab_gmr_all <- rgm %>%
   arrange(subgroup, Group, Visit, Arm, Bsample, Marker) %>% 
   select(Arm, Visit,
          Marker, N,  
-         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
+         `Baseline\nGM`, `Post Baseline\nGM`, GMR)
 
 
 
@@ -813,19 +854,19 @@ gmr_gm_A <- inner_join(
   tab_gm_A %>% 
     dplyr::filter(Visit == "Day 01") %>% 
     select(-c(Visit, N)) %>% 
-    rename(`Baseline\nGMT/GMC` = `GMT/GMC`),
+    rename(`Baseline\nGM` = `GM`),
   tab_gm_A %>% 
     dplyr::filter(Visit != "Day 01") %>% 
-    rename(`Post Baseline\nGMT/GMC` = `GMT/GMC`),
+    rename(`Post Baseline\nGM` = `GM`),
   by = c("subgroup", "Group", "Arm", "Marker")) %>% 
   dplyr::filter(!subgroup %in% c("AgeRisk1", "AgeRisk2")) %>% 
   mutate(Visit = paste0(gsub("ay ", "", Visit), " fold-rise over D01"))
 
 tab_gmr_A <- rgm_A %>% 
   dplyr::filter(grepl("overB", mag_cat)) %>%
-  mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
+  mutate(GMR=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
          subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
-  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, GMR) %>% 
   inner_join(
     gmr_gm_A,
     c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
@@ -835,14 +876,14 @@ tab_gmr_A <- rgm_A %>%
   arrange(subgroup, Group, Visit, Arm, Marker) %>% 
   select(Arm, Visit,
          Marker, N,  
-         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
+         `Baseline\nGM`, `Post Baseline\nGM`, GMR)
 
 
 tab_gmr_all_A <- rgm_A %>% 
   dplyr::filter(grepl("overB", mag_cat)) %>%
-  mutate(`GMTR/GMCR`=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
+  mutate(GMR=sprintf("%.2f\n(%.2f, %.2f)", 10^mag, 10^ci_l, 10^ci_u),
          subgroup=factor(subgrp[subgroup], levels=subgrp), Group=factor(grplev[Group], levels=grplev)) %>% 
-  select(subgroup, Group, Arm, Visit, N, Marker, `GMTR/GMCR`) %>% 
+  select(subgroup, Group, Arm, Visit, N, Marker, GMR) %>% 
   inner_join(
     gmr_gm_A,
     c("subgroup", "Group", "Arm", "Visit", "N", "Marker")) %>% 
@@ -853,7 +894,7 @@ tab_gmr_all_A <- rgm_A %>%
   arrange(subgroup, Group, Visit, Arm, Marker) %>% 
   select(Arm, Visit,
          Marker, N,  
-         `Baseline\nGMT/GMC`, `Post Baseline\nGMT/GMC`, `GMTR/GMCR`)
+         `Baseline\nGM`, `Post Baseline\nGM`, GMR)
 
 print("Done with table6") 
 
@@ -862,7 +903,7 @@ print("Done with table6")
 # log-transformed titers/concentrations
 # Output: tab_rgmt
 # 
-# Ratios of GMT/GMC between subgroups among vacinees
+# Ratios of GM between subgroups among vacinees
 
 comp_lev <- c("Comparator Vaccine", "Investigational Vaccine")
 mag_groups <- gm.v
@@ -894,8 +935,8 @@ tab_rgmt <- inner_join(rgmt_gm,
   mutate(Visit=factor(Visit, levels=c("Day 01", paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))),
          Marker=factor(Marker, levels=allmrks_lev)) %>% 
   filter(!is.na(Marker)) %>% 
-  select(Comparison=comp, Visit, Marker, 
-         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`) %>% 
+  select(Visit, Marker, 
+         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`) %>% 
   arrange(Visit, Marker)
 
 
@@ -907,8 +948,8 @@ tab_rgmt_all <- inner_join(rgmt_gm,
          Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
          Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
   arrange(Visit, Bsample, Marker) %>% 
-  select(Comparison=comp, Visit, Marker, 
-         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`)
+  select(Visit, Marker, 
+         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`)
 
 
 
@@ -935,8 +976,8 @@ tab_rgmt_A <- inner_join(rgmt_gm_A,
   mutate(Visit=factor(Visit, levels=c("Day 01", paste0("Day ", sort(as.numeric(gsub("Day", "", times)))))),
          Marker=factor(Marker, levels=allmrks_lev)) %>% 
   filter(!is.na(Marker)) %>% 
-  select(Comparison=comp, Visit, Marker, 
-         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`) %>% 
+  select(Visit, Marker, 
+         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`) %>% 
   arrange(Visit, Marker)
 
 
@@ -948,8 +989,8 @@ tab_rgmt_all_A <- inner_join(rgmt_gm_A,
          Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
          Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
   arrange(Visit, Bsample, Marker) %>% 
-  select(Comparison=comp, Visit, Marker, 
-         `Investigator Vaccine\nGMT/GMC`=Group1, `Comparator Vaccine\nGMT/GMC`=Group2, `Ratios of GMT/GMC`)
+  select(Visit, Marker, 
+         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`)
   
 
 
@@ -974,10 +1015,10 @@ tab_rrdiff <- rpcnt %>%
                        sprintf("%s\n(%s, %s)", round(Estimate,2), round(ci_l,2), round(ci_u,2)))) %>%
   pivot_wider(id_cols=c(Comparison, subgroup, Arm, Visit, Marker), 
               names_from = Ind, values_from = rslt) %>%
-  select(Comparison, subgroup, Visit, Marker, 
+  select(subgroup, Visit, Marker, 
          `Responder Rate Difference`=Responder
          ) %>% 
-  arrange(subgroup, Visit, Marker, Comparison) 
+  arrange(subgroup, Visit, Marker) 
 
 
 # renameing for ICS
@@ -1022,10 +1063,10 @@ tab_rrdiff_A <- rpcnt_A %>%
          ) %>%
   pivot_wider(id_cols=c(Comparison, subgroup, Arm, Visit, Marker), 
               names_from = Ind, values_from = rslt) %>%
-  select(Comparison, subgroup, Visit, Marker, 
+  select(subgroup, Visit, Marker, 
          `Responder Rate Difference`=Responder#, `% 2-Fold Rise`, `% 4-Fold Rise`
   ) %>% 
-  arrange(subgroup, Visit, Marker, Comparison) 
+  arrange(subgroup, Visit, Marker) 
 
 
 # renameing for ICS
@@ -1059,10 +1100,10 @@ print("Done with table8")
 
 
 # if(grepl("AB", config.cor$ph1)){
-#   names(tab_gm) <- gsub("GMT/GMC", "GMR", names(tab_gm))
-#   names(tab_gmr) <- gsub("GMT/GMC", "GMR", names(tab_gmr))
+#   names(tab_gm) <- gsub("GM", "GMR", names(tab_gm))
+#   names(tab_gmr) <- gsub("GM", "GMR", names(tab_gmr))
 #   names(tab_gmr) <- gsub("GMTR/GMCR", "GMRR", names(tab_gmr))
-#   names(tab_rgmt) <- gsub("GMT/GMC", "GMR", names(tab_rgmt))
+#   names(tab_rgmt) <- gsub("GM", "GMR", names(tab_rgmt))
 # }
 
 }
