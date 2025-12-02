@@ -128,6 +128,13 @@
       "Repository": "CRAN",
       "Hash": "dfbeac3465bfa71a288c23772353b3b2"
     },
+    "PropCIs": {
+      "Package": "PropCIs",
+      "Version": "0.3-0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "83c746e8590a3e64d791daca69f1bf27"
+    },
     "R.methodsS3": {
       "Package": "R.methodsS3",
       "Version": "1.8.1",
@@ -1200,15 +1207,15 @@
     },
     "kyotil": {
       "Package": "kyotil",
-      "Version": "2025.6-7",
+      "Version": "2025.10-31",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "youyifong",
       "RemoteRepo": "kyotil",
       "RemoteRef": "master",
-      "RemoteSha": "4ea09ce9b60966d968dd6185cc0a36703a7af065",
-      "Hash": "4408442ac492eaf8e3842cabc44a0355"
+      "RemoteSha": "f06d21c6aefea700945817a275a6de77ae1d751f",
+      "Hash": "5ff1fd516d8c982e06121f411c4c9978"
     },
     "labeling": {
       "Package": "labeling",
@@ -1864,10 +1871,10 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.13.2",
+      "Version": "0.14.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "079cb1f03ff972b30401ed05623cbe92"
+      "Hash": "30e5eba91b67f7f4d75d31de14bbfbdc"
     },
     "repr": {
       "Package": "repr",
@@ -2383,6 +2390,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "12545f2acf49d1d346d075580122d89c"
+    },
+    "wCorr": {
+      "Package": "wCorr",
+      "Version": "1.9.8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "25b6ec4a3939ff975105fa2f8b12c411"
     },
     "waldo": {
       "Package": "waldo",

@@ -46,3 +46,30 @@ export TRIAL=iliad_ib202p
 cd cor_graphical
 make
 ```
+
+### VaxArt correlates
+
+- To generate covpn_correlates_cor_graphical_nextgen_mock.pdf, run the following commands in a bash shell:
+
+for short report, make sure line 62 of the report.Rmd shows "nextgen_output_flag = 1"
+```{bash}
+export TRIAL=nextgen_mock
+cd cor_graphical
+make
+```
+
+for full report, make sure line 62 of the report.Rmd shows "nextgen_output_flag = 3"
+```{bash}
+export TRIAL=nextgen_mock
+cd cor_graphical
+make
+```
+
+### Sanofi stage2 correlates
+
+- To generate covpn_correlates_cor_graphical_vat08_combined_stage2.pdf, make sure line 28 of cor_data_preprocess.R shows "Trialstage == 2", then run the following commands in a bash shell:
+```{bash}
+export TRIAL=vat08_combined
+cd cor_graphical
+make
+```
