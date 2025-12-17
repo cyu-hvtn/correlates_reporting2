@@ -21,33 +21,6 @@ options(survey.lonely.psu="adjust")
 # To select which tables are included in the report.
 # Also to modify the headers, footers, etc. for each table
 
-randomsubcohort <- case_when(study_name=="COVE" ~ "This table summarizes the 
-      random subcohort, which was randomly sampled from the per-protocol cohort. The 
-      sampling was stratified by 24 strata defined by enrollment characteristics: Assigned 
-      treatment arm $\\\\times$ Baseline SARS-CoV-2 naïve vs. non-naïve status 
-      (defined by serostatus and NAAT testing) $\\\\times$ Randomization strata 
-      (Age < 65 and at-risk, Age < 65 and not at-risk, Age $\\geq$ 65)\\\\times$ 
-      Communities of color (Yes/No) defined by White Non-Hispanic vs. all 
-      others (following the primary COVE trial paper).",
-                             
-                             study_name=="ENSEMBLE" ~ "This table summarizes characteristics of 
-      per-protocol participants in the immunogenicity subcohort, which was randomly 
-      sampled from the study cohort. The sampling was The sampling was stratified by 
-      strata defined by enrollment characteristics: Assigned randomization arm $\\\\times$ 
-      Baseline SARS-CoV-2 seronegative vs. seropositive $\\\\times$ Randomization strata. 
-      The U.S. subcohort includes 8 baseline demographic strata; the Latin America 
-      and South Africa subcohorts each include 4 baseline demographic strata.",
-                             
-                             study_name=="PREVENT19" ~ "This table summarizes characteristics of 
-      per-protocol participants in the immunogenicity subcohort, which was randomly 
-      sampled from the study cohort. The sampling was The sampling was stratified by 
-      strata defined by enrollment characteristics: Assigned randomization arm $\\\\times$ 
-      Baseline SARS-CoV-2 seronegative vs. seropositive $\\\\times$ Randomization strata. 
-      The U.S. subcohort includes 8 baseline demographic strata; the Mexico subcohort includes 2 baseline demographic strata.",
-                             
-                             TRUE~ "This table summarizes characteristics of 
-      per-protocol participants in the immunogenicity subcohort, which was randomly 
-      sampled from the study cohort.")
 
 tlf <-
   list(
@@ -62,7 +35,7 @@ tlf <-
                             "RIS, RIS-sera, RIS-nasal, or RIS-saliva"[!grepl("AB", config.cor$ph1)],
                             "RIS-PBMC"[grepl("AB", config.cor$ph1)],
                             ")"), 
-      table_footer = randomsubcohort,
+      # table_footer = randomsubcohort,
       col_name = c(""[!grepl("AB", config.cor$ph1)],  "Characteristics", "Investigational Vaccine", "Comparator Vaccine", "Total"),
       deselect = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
       pack_row = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
@@ -80,7 +53,7 @@ tlf <-
                             "Track A RIS-sera, Track A RIS-nasal, or Track A RIS-saliva"[!grepl("AB", config.cor$ph1)],
                             "Track A RIS-PBMC"[grepl("AB", config.cor$ph1)],
                             ")"),
-      table_footer = randomsubcohort,
+      # table_footer = randomsubcohort,
       col_name = c(""[!grepl("AB", config.cor$ph1)], "Characteristics", "Investigational Vaccine", "Comparator Vaccine", "Total"),
       deselect = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
       pack_row = if(grepl("AB", config.cor$ph1)){"subgroup"} else{c("Bsample")},
@@ -91,12 +64,13 @@ tlf <-
     
     tab_rr_diff = list(
       table_header = "Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted \\% response).
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (RIS-sera, RIS-nasal, RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
                       or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
                       and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
-                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+                      For each entry, the number with vaccine-response and unweighted frequency is reported, along with the weighted frequency 
+                      (Resp Rate results based on weighted frequency). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
@@ -104,43 +78,46 @@ tlf <-
     
     
     tab_rr_diff_all = list(
-      table_header ="Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+      table_header ="Vaccine-responder frequencies of markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted \\% response).
                       (RIS-sera, RIS-nasal, RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
                       or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
                       and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
-                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+                      For each entry, the number with vaccine-response and unweighted frequency is reported, along with the weighted frequency 
+                      (Resp Rate results based on weighted frequency). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
     
     tab_rr_diff_A = list(
-      table_header = "Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+      table_header = "Vaccine-responder frequencies of IgG-bAb markers at D91 and D366 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted \\% response).
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                        (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
                       or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
                       and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
-                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+                      For each entry, the number with vaccine-response and unweighted frequency is reported, along with the weighted frequency 
+                      (Resp Rate results based on weighted frequency). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
     tab_rr_diff_all_A = list(
-      table_header = "Vaccine-responder frequencies of IgG-bAb markers at D31 and D181 by Investigational and Comparator Vaccine arm and their comparisons. 
-                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted % response).
+      table_header = "Vaccine-responder frequencies of markers at D91 and D366 by Investigational and Comparator Vaccine arm and their comparisons. 
+                      Point and 95\\% CI estimates use IPS weights. Above these estimates are the number included with antibody data, the number of these with vaccine-response, and the ratio of these two numbers (unweighted \\% response).
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). Vaccine-response at a post-baseline time point occurs if the D01 value is < LLOQ at D01 and becomes $\\geq$ 4 times LLOQ at the post vaccination time point, 
                       or if the D01 value is $\\geq$ LLOQ and < ULOQ at D01 and becomes $\\geq$ 4 times higher post vaccination. Also, a D01 value $\\geq$ ULOQ implies a missing value, 
                       and a D01 value < ULOQ and post vaccination value $\\geq$ ULOQ implies a positive response even if the fold-change between D01 and the ULOQ is < 4. 
-                      AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
+                      For each entry, the number with vaccine-response and unweighted frequency is reported, along with the weighted frequency 
+                      (Resp Rate results based on weighted frequency). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       col_name = c("Visit", "Marker", "N", "Resp Rate", "N", "Resp Rate", "Resp Rate\nDiff"), 
       header_above1 = c(" "=2, "Investigational Vaccine" = 2, "Comparator Vaccine" = 2, " "=1)
     ),
     
     
     tab_gmr = list(
-      table_header = "Geometric mean values of IgG-bAb markers at D01, D31, and D181 by Investigational 
+      table_header = "Geometric mean values of IgG-bAb markers fold-rise at D31 over D01 and at D181 over D01 by Investigational 
                       and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
@@ -148,7 +125,7 @@ tlf <-
       col1="2cm"),
     
     tab_gmr_all = list(
-      table_header = "Geometric mean values of IgG-bAb markers at D01, D31, and D181 by Investigational 
+      table_header = "Geometric mean values of markers fold-rise at D31 over D01 and at D181 over D01 by Investigational 
                       and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
@@ -156,7 +133,7 @@ tlf <-
     
     
     tab_gmr_A = list(
-      table_header = "Geometric mean values of IgG-bAb markers at D01, D91, and D366 by Investigational 
+      table_header = "Geometric mean values of IgG-bAb markers fold-rise at D91 over D01 and at D366 over D01 by Investigational 
                       and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
@@ -164,14 +141,14 @@ tlf <-
       col1="2cm"),
     
     tab_gmr_all_A = list(
-      table_header = "Geometric mean values of IgG-bAb markers at D01, D91, and D366 by Investigational 
+      table_header = "Geometric mean values of markers fold-rise at D91 over D01 and at D366 over D01 by Investigational 
                       and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " ",
       col1="2cm"),
     
     tab_rgmt = list(
-      table_header = "Geometric mean values of IgG-bAb markers by Investigational 
+      table_header = "Geometric mean values of IgG-bAb markers at D01, D31, and D181 by Investigational 
                       and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
@@ -179,13 +156,13 @@ tlf <-
     
     
     tab_rgmt_all = list(
-      table_header = "Geometric mean values of IgG-bAb markers by Investigational 
+      table_header = "Geometric mean values of markers at D01, D31, and D181 by Investigational 
                       and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       (RIS-sera, RIS-nasal, RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
       table_footer = " "),
     
     tab_rgmt_A = list(
-      table_header = "Geometric mean values of IgG-bAb markers by Investigational 
+      table_header = "Geometric mean values of IgG-bAb markers at D91 and D181 by Investigational 
                       and Comparator Vaccine arm and their comparisons. Point and 95\\% CI estimates use IPS weights. 
                       Spike antigens Index, Delta AY.4, BA.5, BA.2.86, XBB.1.5, JN.1, KP.2, KP.3, LB.1, and Nucleocapsid antigen Index. 
                       (Track A RIS-sera, Track A RIS-nasal, Track A RIS-saliva). AU, Arbitrary Units. bAb, binding antibodies. CI, confidence interval. N, Nucleocapsid protein.",
@@ -711,6 +688,9 @@ if (study_name%in%c("COVE")) {
 
 if (!grepl("AB", config.cor$ph1)){
 
+ds <- ds %>% 
+  mutate(!!sym(paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno")) := as.logical(!!as.name(paste0("ph2.", "AB."[grepl("AB", config.cor$ph1)], "immuno"))))
+  
 resp.v31 <- grep("Day31|Day181", resp.v, value=T)
 resp.v91 <- grep("Day91|Day366", resp.v, value=T)
   
@@ -908,8 +888,8 @@ print("Done with table6")
 comp_lev <- c("Comparator Vaccine", "Investigational Vaccine")
 mag_groups <- gm.v
 mag_groups <- mag_groups[sapply(mag_groups, function(x)!all(is.na(ds[,x])))]
-mag_groups.v31 <- unique(grep("Day31|Delta31overB|Day181|Delta181overB", mag_groups, value = T))
-mag_groups.v91 <- unique(grep("Day91|Delta91overB|Day366|Delta366overB", mag_groups, value = T))
+mag_groups.v31 <- c(unique(grep("Day31|Delta31overB|Day181|Delta181overB", mag_groups, value = T)), mag_groups[substr(mag_groups, 1, 1)=="B"])
+mag_groups.v91 <- c(unique(grep("Day91|Delta91overB|Day366|Delta366overB", mag_groups, value = T)), mag_groups[substr(mag_groups, 1, 1)=="B"])
 
 
 rgmt <- get_rgmt(ds, mag_groups.v31, "Arm", comp_lev=c("Comparator Vaccine", "Investigational Vaccine"), 
@@ -936,7 +916,7 @@ tab_rgmt <- inner_join(rgmt_gm,
          Marker=factor(Marker, levels=allmrks_lev)) %>% 
   filter(!is.na(Marker)) %>% 
   select(Visit, Marker, 
-         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`) %>% 
+         `Investigational Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`) %>% 
   arrange(Visit, Marker)
 
 
@@ -946,10 +926,10 @@ tab_rgmt_all <- inner_join(rgmt_gm,
   rowwise() %>% 
   mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
          Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
-         Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+         Visit=factor(Visit, levels=c("Day 01", paste0("Day ", sort(as.numeric(gsub("Day", "", times))))))) %>% 
   arrange(Visit, Bsample, Marker) %>% 
   select(Visit, Marker, 
-         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`)
+         `Investigational Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`)
 
 
 
@@ -977,7 +957,7 @@ tab_rgmt_A <- inner_join(rgmt_gm_A,
          Marker=factor(Marker, levels=allmrks_lev)) %>% 
   filter(!is.na(Marker)) %>% 
   select(Visit, Marker, 
-         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`) %>% 
+         `Investigational Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`) %>% 
   arrange(Visit, Marker)
 
 
@@ -987,10 +967,10 @@ tab_rgmt_all_A <- inner_join(rgmt_gm_A,
   rowwise() %>% 
   mutate(Bsample=unlist(strsplit(trimws(Marker), " "))[1],
          Bsample=factor(Bsample, levels= c("Serum", "Nasal", "Saliva", "CD4+", "CD8+")),
-         Visit=factor(Visit, levels=sprintf("D%s fold-rise over D01", sort(as.numeric(gsub("Day", "", times)))))) %>% 
+         Visit=factor(Visit, levels=c("Day 01", paste0("Day ", sort(as.numeric(gsub("Day", "", times))))))) %>% 
   arrange(Visit, Bsample, Marker) %>% 
   select(Visit, Marker, 
-         `Investigator Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`)
+         `Investigational Vaccine\nGM`=Group1, `Comparator Vaccine\nGM`=Group2, `Ratios of GM`=`Ratios of GMT/GMC`)
   
 
 

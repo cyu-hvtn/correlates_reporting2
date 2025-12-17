@@ -28,7 +28,7 @@ base::load(here::here("immuno_tabular", "output", attr(config,"config"), d))
   
   tlf_labels <- tlf[[i]]
   title_i <- tlf_labels[["table_header"]]
-  title_i <- ifelse(substr(title_i, 1, 11)=="Demographic", title_i, paste(tlf_labels[["table_header"]], d_lab))
+  title_i <- ifelse(substr(title_i, 1, 11)=="Demographic", title_i, paste(tlf_labels[["table_header"]], ""))#d_lab))
   title_i <- gsub("_", "\\\\_",title_i)
 
   if (names(tlf)[i] == "tab_strtm1") {

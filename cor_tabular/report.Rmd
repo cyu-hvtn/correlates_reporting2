@@ -27,7 +27,7 @@ numi <- 1
 for (d in dats){
 base::load(here::here("cor_tabular", "output", attr(config,"config"), d))
   # d_lab <- sprintf("(%s)", substr(d, 7, nchar(d)-6)) # name always starts with "Tables"/"Figure" and ends with ".Rdata"
-  cat(sprintf("\n\n## %s", substr(d, 7, nchar(d)-6)))
+  # cat(sprintf("\n\n## %s", substr(d, 7, nchar(d)-6)))
   
   if(any(grepl("Figure", d))){
      for (i in 1:length(tlf)) {
