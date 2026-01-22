@@ -10,7 +10,6 @@ local({
   if (!nzchar(project))
     project <- getwd()
 
-
   # use start-up diagnostics if enabled
   diagnostics <- Sys.getenv("RENV_STARTUP_DIAGNOSTICS", unset = "FALSE")
   if (diagnostics) {
