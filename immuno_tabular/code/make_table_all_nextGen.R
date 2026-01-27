@@ -992,7 +992,7 @@ tab_rrdiff <- rpcnt %>%
          ci_l = Estimate-sqrt((response1-ci_l1)^2+(response2-ci_u2)^2),
          ci_u = Estimate+sqrt((response1-ci_u1)^2+(response2-ci_l2)^2),
          rslt = ifelse(is.na(Estimate), "-", 
-                       sprintf("%s\n(%s, %s)", round(Estimate,2), round(ci_l,2), round(ci_u,2)))) %>%
+                       sprintf("%s%%\n(%s%%, %s%%)", round(Estimate*100,1), round(ci_l*100,1), round(ci_u*100,1)))) %>%
   pivot_wider(id_cols=c(Comparison, subgroup, Arm, Visit, Marker), 
               names_from = Ind, values_from = rslt) %>%
   select(subgroup, Visit, Marker, 
