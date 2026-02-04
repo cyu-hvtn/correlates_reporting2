@@ -1,4 +1,4 @@
-#  Summary Tables{#cor-tabular}
+#  Summary Tables{#immuno-tabular}
 
 ```{r, echo=FALSE, message=FALSE}
 message("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ running immuno_tabular report ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
